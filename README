@@ -1,2 +1,5 @@
 pip install yunomi
 apt-get install python-simpy python-numpy r-base
+
+#cd absim
+mkdir logs
