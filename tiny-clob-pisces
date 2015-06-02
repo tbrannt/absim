@@ -70,7 +70,7 @@ python experiment.py  \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
-	--expPrefix C3 \
+	--expPrefix PISC \
 	--simulationDuration 3000 \
 	--seed 3 \
 	--numRequests 600000\
