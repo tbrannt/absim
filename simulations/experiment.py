@@ -190,7 +190,10 @@ def runExperiment(args):
                           hysterisisFactor=args.hysterisisFactor,
                           demandWeight=clientWeights[i],
                           costExponent=args.costExponent,
-                          concurrencyWeight=args.concurrencyWeight)
+                          concurrencyWeight=args.concurrencyWeight, 
+                          backpressureStrategy=args.backpressureStrategy,
+                          requestCountEquilibrium=args.requestCountEquilibrium,
+                          desiredRtt=args.desiredRtt)
         clients.append(c)
 
     # Start workload generators (analogous to YCSB)
@@ -360,6 +363,12 @@ if __name__ == '__main__':
                         type=float, default=2)
     parser.add_argument('--backpressure', action='store_true',
                         default=False)
+    parser.add_argument('--backpressureStrategy', nargs='?',
+                        type=str, default="cubic")
+    parser.add_argument('--requestCountEquilibrium', nargs='?',
+                        type=int, default=2)
+    parser.add_argument('--desiredRtt', nargs='?',
+                        type=float, default=5.0)
     parser.add_argument('--accessPattern', nargs='?',
                         type=str, default="uniform")
     parser.add_argument('--nwLatencyBase', nargs='?',

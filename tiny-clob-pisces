@@ -58,6 +58,7 @@ python experiment.py  \
 	--replicationFactor 3 \
 	--backpressure \
 	--backpressureStrategy pisces \
+	--desiredRtt 5.0 \
 	--rateInterval  20\
 	--cubicC 0.000004\
 	--cubicSmax 10\

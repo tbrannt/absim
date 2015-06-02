@@ -13,7 +13,9 @@ class Client():
                  accessPattern, replicationFactor, backpressure,
                  shadowReadRatio, rateInterval,
                  cubicC, cubicSmax, cubicBeta, hysterisisFactor,
-                 demandWeight, costExponent, concurrencyWeight):
+                 demandWeight, costExponent, concurrencyWeight, 
+                 backpressureStrategy=None, requestCountEquilibrium=None, 
+                 desiredRtt=None):
         self.id = id_
         self.serverList = serverList
         self.accessPattern = accessPattern
@@ -31,6 +33,9 @@ class Client():
         self.demandWeight = demandWeight
         self.costExponent = costExponent
         self.concurrencyWeight = concurrencyWeight
+        self.backpressureStrategy = backpressureStrategy
+        self.requestCountEquilibrium = requestCountEquilibrium
+        self.desiredRtt = desiredRtt
 
         # Book-keeping and metrics to be recorded follow...
 
@@ -71,6 +76,9 @@ class Client():
         self.cubicSmax = cubicSmax
         self.cubicBeta = cubicBeta
         self.hysterisisFactor = hysterisisFactor
+
+        # Parameters for fast/pisces
+        self.minRttObserved = -1;
 
         # Backpressure related initialization
         if (backpressure is True):
@@ -374,6 +382,37 @@ class Client():
         self.rateMonitor.observe("%s %s" % alphaObservation)
         self.receiveRateMonitor.observe("%s %s" % receiveRateObs)
 
+    def updateRatesFast(self, replica, metricMap, task):
+        if (self.minRttObserved == -1):
+            self.minRttObserved = metricMap["responseTime"]
+        else:
+            self.minRttObserved = min(metricMap["responseTime"], \
+                    self.minRttObserved)
+
+        self.rateLimiters[replica].rate = self.rateLimiters[replica].rate * \
+                    self.minRttObserved / metricMap["responseTime"] + \
+                    self.requestCountEquilibrium
+
+        assert (self.rateLimiters[replica].rate > 0)
+        alphaObservation = (replica.id,
+                            self.rateLimiters[replica].rate)
+        receiveRateObs = (replica.id,
+                          self.receiveRate[replica].getRate())
+        self.rateMonitor.observe("%s %s" % alphaObservation)
+        self.receiveRateMonitor.observe("%s %s" % receiveRateObs)
+
+    def updateRatesPisces(self, replica, metricMap, task):
+        self.rateLimiters[replica].rate = self.rateLimiters[replica].rate * \
+                self.desiredRtt / metricMap["responseTime"]
+
+        assert (self.rateLimiters[replica].rate > 0)
+        alphaObservation = (replica.id,
+                            self.rateLimiters[replica].rate)
+        receiveRateObs = (replica.id,
+                          self.receiveRate[replica].getRate())
+        self.rateMonitor.observe("%s %s" % alphaObservation)
+        self.receiveRateMonitor.observe("%s %s" % receiveRateObs)
+
 
 class DeliverMessageWithDelay(Simulation.Process):
     def __init__(self):
@@ -420,7 +459,12 @@ class ResponseHandler(Simulation.Process):
 
         # Backpressure related book-keeping
         if (client.backpressure):
-            client.updateRates(replicaThatServed, metricMap, task)
+            if(client.backpressureStrategy == "cubic"):
+                client.updateRates(replicaThatServed, metricMap, task)
+            if(client.backpressureStrategy == "fast"):
+                client.updateRatesFast(replicaThatServed, metricMap, task)
+            if(client.backpressureStrategy == "pisces"):
+                client.updateRatesPisces(replicaThatServed, metricMap, task)
 
         client.lastSeen[replicaThatServed] = Simulation.now()
 
