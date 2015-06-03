@@ -276,7 +276,8 @@ def runExperiment(args):
                             at=0.0)
         workloadGens.append(w)
 
-    assert args.lateStartWorkloadNumRequests % args.numLateStartWorkload == 0
+    assert args.lateStartWorkloadNumRequests == 0 or \
+        args.lateStartWorkloadNumRequests % args.numLateStartWorkload == 0
     assert len(clients) >= args.lateStartWorkloadNumClients
     clientsExtraWorkload = clients[0:args.lateStartWorkloadNumClients]
 
@@ -389,7 +390,7 @@ if __name__ == '__main__':
     parser.add_argument('--lateStartWorkloadNumClients', nargs='?',
                         type=int, default=1)
     parser.add_argument('--lateStartWorkloadNumRequests', nargs='?',
-                        type=int, default=1)
+                        type=int, default=0)
     parser.add_argument('--serverConcurrency', nargs='?',
                         type=int, default=1)
     parser.add_argument('--serviceTime', nargs='?',
