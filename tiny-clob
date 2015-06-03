@@ -5,12 +5,50 @@ cd simulations;
 # Run tests
 python -m unittest discover . '*test*.py'
 
+python experiment.py  \
+ 	--numClients 150 \
+	--numServers 50 \
+	--numWorkload 200 \
+	--workloadModel poisson \
+	--serverConcurrency 4 \
+	--serviceTime 4 \
+	--utilization 0.60 \
+	--serviceTimeModel random.expovariate \
+	--replicationFactor 3 \
+	--rateInterval  20\
+	--cubicC 0.000004\
+	--cubicSmax 10\
+	--cubicBeta 0.2\
+	--hysterisisFactor 2\
+	--selectionStrategy 2C \
+	--shadowReadRatio 0.1 \
+	--accessPattern uniform \
+	--nwLatencyBase 0.25 \
+	--nwLatencyMu 0.0\
+	--nwLatencySigma 0.00 \
+	--expPrefix 2C \
+	--simulationDuration 30000 \
+	--seed 3 \
+	--numRequests 50000\
+	--logFolder logs\
+	--expScenario timeVaryingServiceTimeServers\
+	--demandSkew 0.0\
+	--highDemandFraction 0.0\
+	--slowServerFraction 0.0\
+	--slowServerSlowness 0.0\
+	--intervalParam 500\
+	--timeVaryingDrift 3\
+	--concurrencyWeight 150\
+	--batchSizeModel constant\
+	--batchSizeParam 1;
+
+
 # # # To profile, replace the first line with:
 # # # python -m cProfile -o output.txt experiment.py \"
 
 python experiment.py  \
-	--numClients 10 \
-	--numServers 5 \
+ 	--numClients 150 \
+	--numServers 50 \
 	--numWorkload 200 \
 	--workloadModel poisson \
 	--serverConcurrency 4 \
@@ -30,10 +68,10 @@ python experiment.py  \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
-	--expPrefix 01_C3 \
+	--expPrefix C3 \
 	--simulationDuration 30000 \
 	--seed 3 \
-	--numRequests 10000\
+	--numRequests 50000\
 	--logFolder logs\
 	--expScenario timeVaryingServiceTimeServers\
 	--demandSkew 0.0\
@@ -46,85 +84,6 @@ python experiment.py  \
 	--batchSizeModel constant\
 	--batchSizeParam 1;
 
-python experiment.py  \
-	--numClients 10 \
-	--numServers 5 \
-	--numWorkload 200 \
-	--workloadModel poisson \
-	--serverConcurrency 4 \
-	--serviceTime 4 \
-	--utilization 0.60 \
-	--serviceTimeModel random.expovariate \
-	--replicationFactor 3 \
-	--backpressure \
-	--backpressureStrategy fast \
-	--requestCountEquilibrium 2 \
-	--rateInterval  20\
-	--cubicC 0.000004\
-	--cubicSmax 10\
-	--cubicBeta 0.2\
-	--hysterisisFactor 2\
-	--selectionStrategy C3 \
-	--shadowReadRatio 0.1 \
-	--accessPattern uniform \
-	--nwLatencyBase 0.2 \
-	--nwLatencyMu 0.0\
-	--nwLatencySigma 0.00 \
-	--expPrefix 01_FAST \
-	--simulationDuration 30000 \
-	--seed 3 \
-	--numRequests 10000\
-	--logFolder logs\
-	--expScenario timeVaryingServiceTimeServers\
-	--demandSkew 0.0\
-	--highDemandFraction 0.0\
-	--slowServerFraction 0.0\
-	--slowServerSlowness 0.0\
-	--intervalParam 500\
-	--timeVaryingDrift 3\
-	--concurrencyWeight 150\
-	--batchSizeModel constant\
-	--batchSizeParam 1;
-
-python experiment.py  \
-	--numClients 10 \
-	--numServers 5 \
-	--numWorkload 200 \
-	--workloadModel poisson \
-	--serverConcurrency 4 \
-	--serviceTime 4 \
-	--utilization 0.60 \
-	--serviceTimeModel random.expovariate \
-	--replicationFactor 3 \
-	--backpressure \
-	--backpressureStrategy pisces \
-	--desiredRtt 50 \
-	--rateInterval  20\
-	--cubicC 0.000004\
-	--cubicSmax 10\
-	--cubicBeta 0.2\
-	--hysterisisFactor 2\
-	--selectionStrategy C3 \
-	--shadowReadRatio 0.1 \
-	--accessPattern uniform \
-	--nwLatencyBase 0.2 \
-	--nwLatencyMu 0.0\
-	--nwLatencySigma 0.00 \
-	--expPrefix 01_PISC \
-	--simulationDuration 30000 \
-	--seed 3 \
-	--numRequests 10000\
-	--logFolder logs\
-	--expScenario timeVaryingServiceTimeServers\
-	--demandSkew 0.0\
-	--highDemandFraction 0.0\
-	--slowServerFraction 0.0\
-	--slowServerSlowness 0.0\
-	--intervalParam 500\
-	--timeVaryingDrift 3\
-	--concurrencyWeight 150\
-	--batchSizeModel constant\
-	--batchSizeParam 1;
 
 cd ..
 cd plotting;
@@ -133,7 +92,6 @@ cd plotting;
 # Rscript timeseries.r ORA;
 # Rscript timeseries.r LOR;
 # Rscript timeseries.r pendingXserviceTime;
-Rscript timeseries.r 01_C3;
-Rscript timeseries.r 01_FAST;
-Rscript timeseries.r 01_PISC;
+Rscript timeseries.r 2C;
+Rscript timeseries.r C3;
 cd ..
