@@ -16,7 +16,7 @@ python experiment.py  \
 	--numLateStartWorkload 30 \
 	--lateStartWorkloadStartTime 1500 \
 	--lateStartWorkloadNumClients 3 \
-	--lateStartWorkloadNumRequests 50000 \
+	--lateStartWorkloadNumRequests 5000 \
 	--serverConcurrency 4 \
 	--serviceTime 4 \
 	--utilization 0.60 \
@@ -57,7 +57,7 @@ python experiment.py  \
 	--numLateStartWorkload 30 \
 	--lateStartWorkloadStartTime 1500 \
 	--lateStartWorkloadNumClients 3 \
-	--lateStartWorkloadNumRequests 50000 \
+	--lateStartWorkloadNumRequests 5000 \
 	--serverConcurrency 4 \
 	--serviceTime 4 \
 	--utilization 0.60 \
@@ -100,7 +100,7 @@ python experiment.py  \
 	--numLateStartWorkload 30 \
 	--lateStartWorkloadStartTime 1500 \
 	--lateStartWorkloadNumClients 3 \
-	--lateStartWorkloadNumRequests 50000 \
+	--lateStartWorkloadNumRequests 5000 \
 	--serverConcurrency 4 \
 	--serviceTime 4 \
 	--utilization 0.60 \
