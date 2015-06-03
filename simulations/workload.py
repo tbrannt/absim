@@ -8,7 +8,7 @@ class Workload(Simulation.Process):
 
     def __init__(self, id_, latencyMonitor, clientList,
                  model, model_param, numRequests, batchSizeModel,
-                 batchSizeParam, workObserver):
+                 batchSizeParam, workObserver=None, startTime=None):
         self.id_ = id_
         self.latencyMonitor = latencyMonitor
         self.clientList = clientList
@@ -71,7 +71,8 @@ class Workload(Simulation.Process):
             if (self.model == "constant"):
                 yield Simulation.hold, self, self.model_param
 
-        self.workObserver.signalWorkloadDone()
+        if (self.workObserver is not None):
+            self.workObserver.signalWorkloadDone()
 
     def weightedChoice(self):
         r = random.uniform(0, self.total)

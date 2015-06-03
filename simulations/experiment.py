@@ -65,6 +65,7 @@ class WorkObserver:
 
     def stopIfPossible(self):
         if (self.numWorkload == self.workloadDoneCount and self.busyClientCount == 0):
+          print "Simulation finished early. Stopped at time: %s" %(Simulation.now())
           Simulation.stopSimulation()
 
 
