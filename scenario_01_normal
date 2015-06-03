@@ -9,8 +9,8 @@ python -m unittest discover . '*test*.py'
 # # # python -m cProfile -o output.txt experiment.py \"
 
 python experiment.py  \
- 	--numClients 150 \
-	--numServers 50 \
+	--numClients 10 \
+	--numServers 5 \
 	--numWorkload 200 \
 	--workloadModel poisson \
 	--serverConcurrency 4 \
@@ -30,10 +30,10 @@ python experiment.py  \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
-	--expPrefix C3 \
+	--expPrefix 01_C3 \
 	--simulationDuration 30000 \
 	--seed 3 \
-	--numRequests 100000\
+	--numRequests 10000\
 	--logFolder logs\
 	--expScenario timeVaryingServiceTimeServers\
 	--demandSkew 0.0\
@@ -47,8 +47,8 @@ python experiment.py  \
 	--batchSizeParam 1;
 
 python experiment.py  \
- 	--numClients 150 \
-	--numServers 50 \
+	--numClients 10 \
+	--numServers 5 \
 	--numWorkload 200 \
 	--workloadModel poisson \
 	--serverConcurrency 4 \
@@ -70,10 +70,10 @@ python experiment.py  \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
-	--expPrefix FAST \
+	--expPrefix 01_FAST \
 	--simulationDuration 30000 \
 	--seed 3 \
-	--numRequests 100000\
+	--numRequests 10000\
 	--logFolder logs\
 	--expScenario timeVaryingServiceTimeServers\
 	--demandSkew 0.0\
@@ -87,8 +87,8 @@ python experiment.py  \
 	--batchSizeParam 1;
 
 python experiment.py  \
- 	--numClients 150 \
-	--numServers 50 \
+	--numClients 10 \
+	--numServers 5 \
 	--numWorkload 200 \
 	--workloadModel poisson \
 	--serverConcurrency 4 \
@@ -110,10 +110,10 @@ python experiment.py  \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
-	--expPrefix PISC \
+	--expPrefix 01_PISC \
 	--simulationDuration 30000 \
 	--seed 3 \
-	--numRequests 100000\
+	--numRequests 10000\
 	--logFolder logs\
 	--expScenario timeVaryingServiceTimeServers\
 	--demandSkew 0.0\
