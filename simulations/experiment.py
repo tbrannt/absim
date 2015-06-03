@@ -80,6 +80,7 @@ def runExperiment(args):
     servers = []
     clients = []
     workloadGens = []
+    lateStartWorkloadGens = []
     muUpdaters = []
 
     constants.NW_LATENCY_BASE = args.nwLatencyBase
@@ -197,7 +198,7 @@ def runExperiment(args):
     assert sum(clientWeights) > 0.99 * args.numClients
     assert sum(clientWeights) <= args.numClients
 
-    workObserver = WorkObserver(args.numWorkload)
+    workObserver = WorkObserver(args.numWorkload + args.numLateStartWorkload)
 
     # Start the clients
     for i in range(args.numClients):
@@ -272,8 +273,25 @@ def runExperiment(args):
                               args.batchSizeParam,
                               workObserver)
         Simulation.activate(w, w.run(),
-                            at=0.0),
+                            at=0.0)
         workloadGens.append(w)
+
+    assert len(clients) >= args.lateStartWorkloadNumClients
+    clientsExtraWorkload = clients[0:args.lateStartWorkloadNumClients]
+
+    for i in range(args.numLateStartWorkload):
+        w = workload.Workload(i + args.numWorkload, latencyMonitor,
+                              clientsExtraWorkload,
+                              args.workloadModel,
+                              interArrivalTime * args.numWorkload,
+                              args.lateStartWorkloadNumRequests/args.numLateStartWorkload,
+                              args.batchSizeModel,
+                              args.batchSizeParam,
+                              workObserver,
+                              args.lateStartWorkloadStartTime)
+        Simulation.activate(w, w.run(),
+                            at=0.0)
+        lateStartWorkloadGens.append(w)
 
     # Begin simulation
     Simulation.simulate(until=args.simulationDuration)
@@ -352,7 +370,10 @@ def runExperiment(args):
     printMonitorTimeSeriesToFile(latencyFD, "0",
                                  latencyMonitor)
 
-    assert args.numRequests == len(latencyMonitor)
+    #todo: fix & delete
+    print "args.numRequests", args.numRequests, "args.lateStartWorkloadNumRequests", \
+            args.lateStartWorkloadNumRequests, "len(latencyMonitor)", len(latencyMonitor)
+    assert args.numRequests + args.lateStartWorkloadNumRequests == len(latencyMonitor)
 
 
 if __name__ == '__main__':
@@ -362,6 +383,14 @@ if __name__ == '__main__':
     parser.add_argument('--numServers', nargs='?',
                         type=int, default=1)
     parser.add_argument('--numWorkload', nargs='?',
+                        type=int, default=1)
+    parser.add_argument('--numLateStartWorkload', nargs='?',
+                        type=int, default=0)
+    parser.add_argument('--lateStartWorkloadStartTime', nargs='?',
+                        type=float, default=1000)
+    parser.add_argument('--lateStartWorkloadNumClients', nargs='?',
+                        type=int, default=1)
+    parser.add_argument('--lateStartWorkloadNumRequests', nargs='?',
                         type=int, default=1)
     parser.add_argument('--serverConcurrency', nargs='?',
                         type=int, default=1)
