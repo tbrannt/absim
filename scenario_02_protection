@@ -13,6 +13,10 @@ python experiment.py  \
 	--numServers 5 \
 	--numWorkload 200 \
 	--workloadModel poisson \
+	--numLateStartWorkload 30 \
+	--lateStartWorkloadStartTime 1500 \
+	--lateStartWorkloadNumClients 3 \
+	--lateStartWorkloadNumRequests 50000 \
 	--serverConcurrency 4 \
 	--serviceTime 4 \
 	--utilization 0.60 \
@@ -33,8 +37,9 @@ python experiment.py  \
 	--expPrefix 02_C3 \
 	--simulationDuration 30000 \
 	--seed 3 \
-	--numRequests 10000\
+	--numRequests 20000\
 	--logFolder logs\
+	--expScenario base\
 	--demandSkew 0.0\
 	--highDemandFraction 0.0\
 	--slowServerFraction 0.0\
@@ -49,6 +54,10 @@ python experiment.py  \
 	--numServers 5 \
 	--numWorkload 200 \
 	--workloadModel poisson \
+	--numLateStartWorkload 30 \
+	--lateStartWorkloadStartTime 1500 \
+	--lateStartWorkloadNumClients 3 \
+	--lateStartWorkloadNumRequests 50000 \
 	--serverConcurrency 4 \
 	--serviceTime 4 \
 	--utilization 0.60 \
@@ -71,8 +80,9 @@ python experiment.py  \
 	--expPrefix 02_FAST \
 	--simulationDuration 30000 \
 	--seed 3 \
-	--numRequests 10000\
+	--numRequests 20000\
 	--logFolder logs\
+	--expScenario base\
 	--demandSkew 0.0\
 	--highDemandFraction 0.0\
 	--slowServerFraction 0.0\
@@ -87,6 +97,10 @@ python experiment.py  \
 	--numServers 5 \
 	--numWorkload 200 \
 	--workloadModel poisson \
+	--numLateStartWorkload 30 \
+	--lateStartWorkloadStartTime 1500 \
+	--lateStartWorkloadNumClients 3 \
+	--lateStartWorkloadNumRequests 50000 \
 	--serverConcurrency 4 \
 	--serviceTime 4 \
 	--utilization 0.60 \
@@ -109,7 +123,7 @@ python experiment.py  \
 	--expPrefix 02_PISC \
 	--simulationDuration 30000 \
 	--seed 3 \
-	--numRequests 10000\
+	--numRequests 20000\
 	--logFolder logs\
 	--expScenario base\
 	--demandSkew 0.0\
