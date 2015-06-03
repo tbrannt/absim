@@ -8,7 +8,7 @@ class Workload(Simulation.Process):
 
     def __init__(self, id_, latencyMonitor, clientList,
                  model, model_param, numRequests, batchSizeModel,
-                 batchSizeParam):
+                 batchSizeParam, workObserver):
         self.id_ = id_
         self.latencyMonitor = latencyMonitor
         self.clientList = clientList
@@ -18,6 +18,7 @@ class Workload(Simulation.Process):
         self.batchSizeModel = batchSizeModel
         self.batchSizeParam = batchSizeParam
         self.total = sum(client.demandWeight for client in self.clientList)
+        self.workObserver = workObserver
         Simulation.Process.__init__(self, name='Workload' + str(id_))
 
     # TODO: also need non-uniform client access
@@ -69,6 +70,8 @@ class Workload(Simulation.Process):
             # If model is constant, add fixed delay
             if (self.model == "constant"):
                 yield Simulation.hold, self, self.model_param
+
+        self.workObserver.signalWorkloadDone()
 
     def weightedChoice(self):
         r = random.uniform(0, self.total)

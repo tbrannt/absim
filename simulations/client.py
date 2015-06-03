@@ -15,7 +15,7 @@ class Client():
                  cubicC, cubicSmax, cubicBeta, hysterisisFactor,
                  demandWeight, costExponent, concurrencyWeight, 
                  backpressureStrategy=None, requestCountEquilibrium=None, 
-                 desiredRtt=None):
+                 desiredRtt=None, workObserver=None):
         self.id = id_
         self.serverList = serverList
         self.accessPattern = accessPattern
@@ -36,6 +36,7 @@ class Client():
         self.backpressureStrategy = backpressureStrategy
         self.requestCountEquilibrium = requestCountEquilibrium
         self.desiredRtt = desiredRtt
+        self.workObserver = workObserver
 
         # Book-keeping and metrics to be recorded follow...
 
@@ -111,6 +112,7 @@ class Client():
         return Simulation.now()/1000.0
 
     def schedule(self, task, replicaSet=None):
+        self.workObserver.signalClientNewWork()
         replicaToServe = None
         firstReplicaIndex = None
 
@@ -308,6 +310,7 @@ class Client():
         if (random.uniform(0, 1.0) < self.shadowReadRatio):
             for replica in replicaSet:
                 if (replica is not replicaToServe):
+                    self.workObserver.signalClientNewWork()
                     shadowReadTask = task.Task("ShadowRead", "ShadowRead",
                                                1, None, self)
                     self.taskArrivalTimeTracker[shadowReadTask] =\
@@ -484,6 +487,8 @@ class ResponseHandler(Simulation.Process):
                 task.latencyMonitor.observe("%s %s" %
                                             (Simulation.now() - task.start,
                                              client.id))
+
+        client.workObserver.signalClientWorkDone()
 
 
 class BackpressureScheduler(Simulation.Process):

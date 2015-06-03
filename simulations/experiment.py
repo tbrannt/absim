@@ -46,6 +46,28 @@ class ClientAdder(Simulation.Process):
         yield Simulation.hold, self,
 
 
+class WorkObserver:
+    def __init__(self, numWorkload):
+        self.numWorkload = numWorkload
+        self.workloadDoneCount = 0
+        self.busyClientCount = 0
+
+    def signalWorkloadDone(self):
+        self.workloadDoneCount += 1
+        self.stopIfPossible()
+
+    def signalClientNewWork(self):
+        self.busyClientCount += 1
+
+    def signalClientWorkDone(self):
+        self.busyClientCount -= 1
+        self.stopIfPossible()
+
+    def stopIfPossible(self):
+        if (self.numWorkload == self.workloadDoneCount and self.busyClientCount == 0):
+          Simulation.stopSimulation()
+
+
 def runExperiment(args):
 
     # Set the random seed
@@ -174,6 +196,8 @@ def runExperiment(args):
     assert sum(clientWeights) > 0.99 * args.numClients
     assert sum(clientWeights) <= args.numClients
 
+    workObserver = WorkObserver(args.numWorkload)
+
     # Start the clients
     for i in range(args.numClients):
         c = client.Client(id_="Client%s" % (i),
@@ -193,7 +217,8 @@ def runExperiment(args):
                           concurrencyWeight=args.concurrencyWeight, 
                           backpressureStrategy=args.backpressureStrategy,
                           requestCountEquilibrium=args.requestCountEquilibrium,
-                          desiredRtt=args.desiredRtt)
+                          desiredRtt=args.desiredRtt,
+                          workObserver=workObserver)
         clients.append(c)
 
     # Start workload generators (analogous to YCSB)
@@ -243,7 +268,8 @@ def runExperiment(args):
                               interArrivalTime * args.numWorkload,
                               args.numRequests/args.numWorkload,
                               args.batchSizeModel,
-                              args.batchSizeParam)
+                              args.batchSizeParam,
+                              workObserver)
         Simulation.activate(w, w.run(),
                             at=0.0),
         workloadGens.append(w)
@@ -324,6 +350,7 @@ def runExperiment(args):
 
     printMonitorTimeSeriesToFile(latencyFD, "0",
                                  latencyMonitor)
+
     assert args.numRequests == len(latencyMonitor)
 
 
