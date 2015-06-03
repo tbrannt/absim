@@ -276,6 +276,7 @@ def runExperiment(args):
                             at=0.0)
         workloadGens.append(w)
 
+    assert args.lateStartWorkloadNumRequests % args.numLateStartWorkload == 0
     assert len(clients) >= args.lateStartWorkloadNumClients
     clientsExtraWorkload = clients[0:args.lateStartWorkloadNumClients]
 
@@ -370,9 +371,6 @@ def runExperiment(args):
     printMonitorTimeSeriesToFile(latencyFD, "0",
                                  latencyMonitor)
 
-    #todo: fix & delete
-    print "args.numRequests", args.numRequests, "args.lateStartWorkloadNumRequests", \
-            args.lateStartWorkloadNumRequests, "len(latencyMonitor)", len(latencyMonitor)
     assert args.numRequests + args.lateStartWorkloadNumRequests == len(latencyMonitor)
 
 
