@@ -133,7 +133,7 @@ cd plotting;
 # Rscript timeseries.r ORA;
 # Rscript timeseries.r LOR;
 # Rscript timeseries.r pendingXserviceTime;
-Rscript timeseries.r C3;
-Rscript timeseries.r FAST;
-Rscript timeseries.r PISC;
+Rscript timeseries.r 01_C3;
+Rscript timeseries.r 01_FAST;
+Rscript timeseries.r 01_PISC;
 cd ..
