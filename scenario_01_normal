@@ -33,7 +33,7 @@ python experiment.py  \
 	--expPrefix 01_C3 \
 	--simulationDuration 30000 \
 	--seed 3 \
-	--numRequests 10000\
+	--numRequests 20000\
 	--logFolder logs\
 	--expScenario timeVaryingServiceTimeServers\
 	--demandSkew 0.0\
@@ -42,7 +42,7 @@ python experiment.py  \
 	--slowServerSlowness 0.0\
 	--intervalParam 500\
 	--timeVaryingDrift 3\
-	--concurrencyWeight 150\
+	--concurrencyWeight 10\
 	--batchSizeModel constant\
 	--batchSizeParam 1;
 
@@ -73,7 +73,7 @@ python experiment.py  \
 	--expPrefix 01_FAST \
 	--simulationDuration 30000 \
 	--seed 3 \
-	--numRequests 10000\
+	--numRequests 20000\
 	--logFolder logs\
 	--expScenario timeVaryingServiceTimeServers\
 	--demandSkew 0.0\
@@ -82,7 +82,7 @@ python experiment.py  \
 	--slowServerSlowness 0.0\
 	--intervalParam 500\
 	--timeVaryingDrift 3\
-	--concurrencyWeight 150\
+	--concurrencyWeight 10\
 	--batchSizeModel constant\
 	--batchSizeParam 1;
 
@@ -113,7 +113,7 @@ python experiment.py  \
 	--expPrefix 01_PISC \
 	--simulationDuration 30000 \
 	--seed 3 \
-	--numRequests 10000\
+	--numRequests 20000\
 	--logFolder logs\
 	--expScenario timeVaryingServiceTimeServers\
 	--demandSkew 0.0\
@@ -122,7 +122,44 @@ python experiment.py  \
 	--slowServerSlowness 0.0\
 	--intervalParam 500\
 	--timeVaryingDrift 3\
-	--concurrencyWeight 150\
+	--concurrencyWeight 10\
+	--batchSizeModel constant\
+	--batchSizeParam 1;
+
+python experiment.py  \
+	--numClients 10 \
+	--numServers 5 \
+	--numWorkload 200 \
+	--workloadModel poisson \
+	--serverConcurrency 4 \
+	--serviceTime 4 \
+	--utilization 0.60 \
+	--serviceTimeModel random.expovariate \
+	--replicationFactor 3 \
+	--rateInterval  20\
+	--cubicC 0.000004\
+	--cubicSmax 10\
+	--cubicBeta 0.2\
+	--hysterisisFactor 2\
+	--selectionStrategy C3 \
+	--shadowReadRatio 0.1 \
+	--accessPattern uniform \
+	--nwLatencyBase 0.2 \
+	--nwLatencyMu 0.0\
+	--nwLatencySigma 0.00 \
+	--expPrefix 01_NO_BACK \
+	--simulationDuration 30000 \
+	--seed 3 \
+	--numRequests 20000\
+	--logFolder logs\
+	--expScenario timeVaryingServiceTimeServers\
+	--demandSkew 0.0\
+	--highDemandFraction 0.0\
+	--slowServerFraction 0.0\
+	--slowServerSlowness 0.0\
+	--intervalParam 500\
+	--timeVaryingDrift 3\
+	--concurrencyWeight 10\
 	--batchSizeModel constant\
 	--batchSizeParam 1;
 
@@ -136,4 +173,5 @@ cd plotting;
 Rscript timeseries.r 01_C3;
 Rscript timeseries.r 01_FAST;
 Rscript timeseries.r 01_PISC;
+Rscript timeseries.r 01_NO_BACK;
 cd ..
