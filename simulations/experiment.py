@@ -92,12 +92,21 @@ def runExperiment(args):
 
     serviceRatePerServer = []
     if (args.expScenario == "base"):
+        # Monitor to track service rates
+        serverRateMonitor = Simulation.Monitor(name="ServerRateMonitor")
+
         # Start the servers
         for i in range(args.numServers):
             serv = server.Server(i,
                                  resourceCapacity=args.serverConcurrency,
                                  serviceTime=(args.serviceTime),
                                  serviceTimeModel=args.serviceTimeModel)
+            mup = muUpdater.MuUpdater(serv, 1000,
+                                      args.serviceTime,
+                                      1,
+                                      serverRateMonitor)
+            Simulation.activate(mup, mup.run(), at=0.0)
+            muUpdaters.append(mup)
             servers.append(serv)
     elif(args.expScenario == "multipleServiceTimeServers"):
       # Start the servers

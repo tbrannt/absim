@@ -14,7 +14,7 @@ python experiment.py  \
 	--numWorkload 200 \
 	--workloadModel poisson \
 	--numLateStartWorkload 30 \
-	--lateStartWorkloadStartTime 1500 \
+	--lateStartWorkloadStartTime 10000 \
 	--lateStartWorkloadNumClients 3 \
 	--lateStartWorkloadNumRequests 6000 \
 	--serverConcurrency 4 \
@@ -55,7 +55,7 @@ python experiment.py  \
 	--numWorkload 200 \
 	--workloadModel poisson \
 	--numLateStartWorkload 30 \
-	--lateStartWorkloadStartTime 1500 \
+	--lateStartWorkloadStartTime 10000 \
 	--lateStartWorkloadNumClients 3 \
 	--lateStartWorkloadNumRequests 6000 \
 	--serverConcurrency 4 \
@@ -98,7 +98,7 @@ python experiment.py  \
 	--numWorkload 200 \
 	--workloadModel poisson \
 	--numLateStartWorkload 30 \
-	--lateStartWorkloadStartTime 1500 \
+	--lateStartWorkloadStartTime 10000 \
 	--lateStartWorkloadNumClients 3 \
 	--lateStartWorkloadNumRequests 6000 \
 	--serverConcurrency 4 \
@@ -141,7 +141,7 @@ python experiment.py  \
 	--numWorkload 200 \
 	--workloadModel poisson \
 	--numLateStartWorkload 30 \
-	--lateStartWorkloadStartTime 1500 \
+	--lateStartWorkloadStartTime 10000 \
 	--lateStartWorkloadNumClients 3 \
 	--lateStartWorkloadNumRequests 6000 \
 	--serverConcurrency 4 \

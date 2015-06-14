@@ -19,11 +19,14 @@ class Workload(Simulation.Process):
         self.batchSizeParam = batchSizeParam
         self.total = sum(client.demandWeight for client in self.clientList)
         self.workObserver = workObserver
+        self.startTime = startTime
         Simulation.Process.__init__(self, name='Workload' + str(id_))
 
     # TODO: also need non-uniform client access
     # Need to pin workload to a client
     def run(self):
+        if (self.startTime is not None):
+            yield Simulation.hold, self, self.startTime
 
         taskCounter = 0
         while(self.numRequests != 0):
