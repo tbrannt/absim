@@ -35,9 +35,9 @@ python experiment.py  \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
 	--expPrefix 02_C3 \
-	--simulationDuration 30000 \
+	--simulationDuration 80000 \
 	--seed 3 \
-	--numRequests 120000\
+	--numRequests 70000\
 	--logFolder logs\
 	--expScenario base\
 	--demandSkew 0.0\
@@ -78,9 +78,9 @@ python experiment.py  \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
 	--expPrefix 02_FAST \
-	--simulationDuration 30000 \
+	--simulationDuration 80000 \
 	--seed 3 \
-	--numRequests 120000\
+	--numRequests 70000\
 	--logFolder logs\
 	--expScenario base\
 	--demandSkew 0.0\
@@ -121,9 +121,9 @@ python experiment.py  \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
 	--expPrefix 02_PISC \
-	--simulationDuration 30000 \
+	--simulationDuration 80000 \
 	--seed 3 \
-	--numRequests 120000\
+	--numRequests 70000\
 	--logFolder logs\
 	--expScenario base\
 	--demandSkew 0.0\
@@ -161,9 +161,9 @@ python experiment.py  \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
 	--expPrefix 02_NO_BACK \
-	--simulationDuration 30000 \
+	--simulationDuration 80000 \
 	--seed 3 \
-	--numRequests 120000\
+	--numRequests 70000\
 	--logFolder logs\
 	--expScenario base\
 	--demandSkew 0.0\
