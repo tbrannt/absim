@@ -15,7 +15,8 @@ class Client():
                  cubicC, cubicSmax, cubicBeta, hysterisisFactor,
                  demandWeight, costExponent, concurrencyWeight, 
                  backpressureStrategy=None, requestCountEquilibrium=None, 
-                 desiredRtt=None, workObserver=None):
+                 desiredRtt=None, workObserver=None, piscesAlpha=None,
+                 piscesUpdateWindowSize=None):
         self.id = id_
         self.serverList = serverList
         self.accessPattern = accessPattern
@@ -37,6 +38,10 @@ class Client():
         self.requestCountEquilibrium = requestCountEquilibrium
         self.desiredRtt = desiredRtt
         self.workObserver = workObserver
+        self.piscesAlpha = piscesAlpha
+        self.piscesUpdateWindowSize = piscesUpdateWindowSize
+        self.piscesUpdateCountdown = self.piscesUpdateWindowSize
+        self.responseTimeSum = 0;
 
         # Book-keeping and metrics to be recorded follow...
 
@@ -396,7 +401,7 @@ class Client():
 
         self.rateLimiters[replica].rate = self.rateLimiters[replica].rate * \
                     self.minRttObserved / metricMap["responseTime"] + \
-                    self.requestCountEquilibrium
+                    self.requestCountEquilibrium / self.minRttObserved
 
         assert (self.rateLimiters[replica].rate > 0)
         alphaObservation = (replica.id,
@@ -407,17 +412,32 @@ class Client():
         self.receiveRateMonitor.observe("%s %s" % receiveRateObs)
 
     def updateRatesPisces(self, replica, metricMap, task):
-        self.rateLimiters[replica].rate = self.rateLimiters[replica].rate * \
-                self.desiredRtt / metricMap["responseTime"]
+        if (self.piscesUpdateCountdown == 0):
+            self.responseTimeSum += metricMap["responseTime"]
+            respT = self.responseTimeSum / (self.piscesUpdateWindowSize + 1)
+            print "time now: ", Simulation.now(), "self.responseTimeSum", self.responseTimeSum, "respT", respT
+            print  "rate old: ", self.rateLimiters[replica].rate
 
-        assert (self.rateLimiters[replica].rate > 0)
-        alphaObservation = (replica.id,
-                            self.rateLimiters[replica].rate)
-        receiveRateObs = (replica.id,
-                          self.receiveRate[replica].getRate())
-        self.rateMonitor.observe("%s %s" % alphaObservation)
-        self.receiveRateMonitor.observe("%s %s" % receiveRateObs)
+            self.rateLimiters[replica].rate = (1 - self.piscesAlpha) * self.rateLimiters[replica].rate + \
+                    self.piscesAlpha * self.rateLimiters[replica].rate * self.desiredRtt / respT
+            minRate = 0.01 # server rate (0.25) * server concurrency (4) / client count (10) - a bit
+            maxRate = 3 # server rate (0.25) * server concurrency (4) + a bit
+            self.rateLimiters[replica].rate = max(self.rateLimiters[replica].rate, minRate)
+            self.rateLimiters[replica].rate = min(self.rateLimiters[replica].rate, maxRate)
 
+            print  "rate new: ", self.rateLimiters[replica].rate
+            assert (self.rateLimiters[replica].rate > 0)
+            alphaObservation = (replica.id,
+                                self.rateLimiters[replica].rate)
+            receiveRateObs = (replica.id,
+                              self.receiveRate[replica].getRate())
+            self.rateMonitor.observe("%s %s" % alphaObservation)
+            self.receiveRateMonitor.observe("%s %s" % receiveRateObs)
+            self.responseTimeSum = 0
+            self.piscesUpdateCountdown = self.piscesUpdateWindowSize
+        else:
+            self.responseTimeSum += metricMap["responseTime"]
+            self.piscesUpdateCountdown -= 1
 
 class DeliverMessageWithDelay(Simulation.Process):
     def __init__(self):

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+./scenario_01_normal
+./scenario_02_protection
