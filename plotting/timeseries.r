@@ -57,13 +57,13 @@ colnames(server.rate)[2] <- "Timestamp"
 colnames(server.rate)[3] <- "ServerId"
 colnames(server.rate)[4] <- "ServerRate"
 
-p1 <- ggplot(latency[latency$ClientId == "Client0",]) + 
-	  geom_point(aes(y=Latency, x=Timestamp), size=4) + 
-	  facet_grid(ServerId ~ .) +
-	  ggtitle(paste(prefix, "Latency")) +
-	  ylim(c(0, 200)) +
+p1 <- ggplot(latency) +
+	  geom_point(aes(y=Latency, x=Timestamp, colour=ClientId), size=2) +
+	  facet_grid(ClientId ~ .) +
+	  ggtitle(paste(prefix, "Latencies")) +
 	  theme(text = element_text(size=15), 
-	  		axis.text = element_text(size=20))
+			axis.text = element_text(size=20))
+
 ggsave(p1, file=paste(prefix, "_latency.png", sep=""), width=15)
 
 p1 <- ggplot(act.mon) + 
