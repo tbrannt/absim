@@ -15,7 +15,7 @@ class Server():
                                                  qType=Simulation.PriorityQ,
                                                  monitored=True)
         self.serverRRMonitor = Simulation.Monitor(name="ServerMonitor")
-        self.serverActualRateMonitor = Simulation.Monitor(name="ServerMonitorActualRate")
+        self.serverServiceTimeMonitor = Simulation.Monitor(name="ServerMonitorServiceTime")
 
     def enqueueTask(self, task):
         executor = Executor(self, task)
@@ -58,7 +58,7 @@ class Executor(Simulation.Process):
         yield Simulation.hold, self, serviceTime
         yield Simulation.release, self, self.server.queueResource
 
-        self.server.serverActualRateMonitor.observe(serviceTime)
+        self.server.serverServiceTimeMonitor.observe(serviceTime)
 
         queueSizeAfter = len(self.server.queueResource.waitQ)
         self.task.sigTaskComplete({"waitingTime": waitTime,

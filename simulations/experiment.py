@@ -333,7 +333,7 @@ def runExperiment(args):
                                            args.expPrefix), 'w')
     serverRRFD = open("../%s/%s_serverRR" % (args.logFolder,
                                              args.expPrefix), 'w')
-    serverActualRateFD = open("../%s/%s_serverActualRate" % (args.logFolder,
+    serverServiceTimeFD = open("../%s/%s_serverServiceTime" % (args.logFolder,
                                              args.expPrefix), 'w')
     serverRateFD = open("../%s/%s_serverRate" % (args.logFolder,
                                                  args.expPrefix), 'w')
@@ -367,9 +367,9 @@ def runExperiment(args):
         printMonitorTimeSeriesToFile(serverRRFD,
                                      serv.id,
                                      serv.serverRRMonitor)
-        printMonitorTimeSeriesToFile(serverActualRateFD,
+        printMonitorTimeSeriesToFile(serverServiceTimeFD,
                                      serv.id,
-                                     serv.serverActualRateMonitor)
+                                     serv.serverServiceTimeMonitor)
         print "------- Server:%s %s ------" % (serv.id, "WaitMon")
         print "Mean:", serv.queueResource.waitMon.mean()
 
