@@ -1,4 +1,5 @@
 #!/bin/bash
 
 ./scenario_01_normal
-./scenario_02_protection
+./scenario_02_timevary
+./scenario_03_protection
