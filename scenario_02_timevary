@@ -30,7 +30,7 @@ python experiment.py  \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
-	--expPrefix 01_C3 \
+	--expPrefix 02_C3 \
 	--simulationDuration 30000 \
 	--seed 3 \
 	--numRequests 20000\
@@ -70,7 +70,7 @@ python experiment.py  \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
-	--expPrefix 01_FAST \
+	--expPrefix 02_FAST \
 	--simulationDuration 30000 \
 	--seed 3 \
 	--numRequests 20000\
@@ -98,7 +98,7 @@ python experiment.py  \
 	--replicationFactor 3 \
 	--backpressure \
 	--backpressureStrategy pisces \
-	--desiredRtt 50 \
+	--desiredRtt 14 \
 	--rateInterval  20\
 	--cubicC 0.000004\
 	--cubicSmax 10\
@@ -110,7 +110,7 @@ python experiment.py  \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
-	--expPrefix 01_PISC \
+	--expPrefix 02_PISC \
 	--simulationDuration 30000 \
 	--seed 3 \
 	--numRequests 20000\
@@ -147,7 +147,7 @@ python experiment.py  \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
-	--expPrefix 01_NO_BACK \
+	--expPrefix 02_NO_BACK \
 	--simulationDuration 30000 \
 	--seed 3 \
 	--numRequests 20000\
@@ -170,8 +170,8 @@ cd plotting;
 # Rscript timeseries.r ORA;
 # Rscript timeseries.r LOR;
 # Rscript timeseries.r pendingXserviceTime;
-Rscript timeseries.r 01_C3;
-Rscript timeseries.r 01_FAST;
-Rscript timeseries.r 01_PISC;
-Rscript timeseries.r 01_NO_BACK;
+Rscript timeseries.r 02_C3;
+Rscript timeseries.r 02_FAST;
+Rscript timeseries.r 02_PISC;
+Rscript timeseries.r 02_NO_BACK;
 cd ..
