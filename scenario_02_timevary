@@ -25,7 +25,7 @@ python experiment.py  \
 	--cubicBeta 0.2\
 	--hysterisisFactor 2\
 	--selectionStrategy C3 \
-	--shadowReadRatio 0.0 \
+	--shadowReadRatio 0.1 \
 	--accessPattern uniform \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
@@ -65,7 +65,7 @@ python experiment.py  \
 	--cubicBeta 0.2\
 	--hysterisisFactor 2\
 	--selectionStrategy C3 \
-	--shadowReadRatio 0.0 \
+	--shadowReadRatio 0.1 \
 	--accessPattern uniform \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
@@ -105,7 +105,7 @@ python experiment.py  \
 	--cubicBeta 0.2\
 	--hysterisisFactor 2\
 	--selectionStrategy C3 \
-	--shadowReadRatio 0.0 \
+	--shadowReadRatio 0.1 \
 	--accessPattern uniform \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
@@ -142,7 +142,7 @@ python experiment.py  \
 	--cubicBeta 0.2\
 	--hysterisisFactor 2\
 	--selectionStrategy C3 \
-	--shadowReadRatio 0.0 \
+	--shadowReadRatio 0.1 \
 	--accessPattern uniform \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
