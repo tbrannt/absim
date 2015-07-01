@@ -9,8 +9,8 @@ python -m unittest discover . '*test*.py'
 # # # python -m cProfile -o output.txt experiment.py \"
 
 python experiment.py  \
-	--numClients 10 \
-	--numServers 5 \
+	--numClients 4 \
+	--numServers 4 \
 	--numWorkload 200 \
 	--workloadModel poisson \
 	--serverConcurrency 4 \
@@ -19,7 +19,7 @@ python experiment.py  \
 	--serviceTimeModel random.expovariate \
 	--replicationFactor 3 \
 	--backpressure \
-	--rateInterval  20\
+	--rateInterval  10\
 	--cubicC 0.000004\
 	--cubicSmax 10\
 	--cubicBeta 0.2\
@@ -33,7 +33,7 @@ python experiment.py  \
 	--expPrefix 04_C3 \
 	--simulationDuration 80000 \
 	--seed 3 \
-	--numRequests 200000\
+	--numRequests 180000\
 	--logFolder logs\
 	--expScenario base\
 	--demandSkew 0.0\
@@ -46,8 +46,8 @@ python experiment.py  \
 	--batchSizeParam 1;
 
 python experiment.py  \
-	--numClients 10 \
-	--numServers 5 \
+	--numClients 4 \
+	--numServers 4 \
 	--numWorkload 200 \
 	--workloadModel poisson \
 	--serverConcurrency 4 \
@@ -58,7 +58,7 @@ python experiment.py  \
 	--backpressure \
 	--backpressureStrategy fast \
 	--requestCountEquilibrium 2 \
-	--rateInterval  20\
+	--rateInterval  10\
 	--cubicC 0.000004\
 	--cubicSmax 10\
 	--cubicBeta 0.2\
@@ -72,7 +72,7 @@ python experiment.py  \
 	--expPrefix 04_FAST \
 	--simulationDuration 80000 \
 	--seed 3 \
-	--numRequests 200000\
+	--numRequests 180000\
 	--logFolder logs\
 	--expScenario base\
 	--demandSkew 0.0\
@@ -85,8 +85,8 @@ python experiment.py  \
 	--batchSizeParam 1;
 
 python experiment.py  \
-	--numClients 10 \
-	--numServers 5 \
+	--numClients 4 \
+	--numServers 4 \
 	--numWorkload 200 \
 	--workloadModel poisson \
 	--serverConcurrency 4 \
@@ -98,7 +98,7 @@ python experiment.py  \
 	--backpressureStrategy pisces \
 	--desiredRtt 60.0 \
 	--piscesAlpha 0.1\
-	--rateInterval  1\
+	--rateInterval  10\
 	--cubicC 0.000004\
 	--cubicSmax 10\
 	--cubicBeta 0.2\
@@ -112,7 +112,7 @@ python experiment.py  \
 	--expPrefix 04_PISC \
 	--simulationDuration 80000 \
 	--seed 3 \
-	--numRequests 200000\
+	--numRequests 180000\
 	--logFolder logs\
 	--expScenario base\
 	--demandSkew 0.0\
@@ -125,8 +125,8 @@ python experiment.py  \
 	--batchSizeParam 1;
 
 python experiment.py  \
-	--numClients 10 \
-	--numServers 5 \
+	--numClients 4 \
+	--numServers 4 \
 	--numWorkload 200 \
 	--workloadModel poisson \
 	--serverConcurrency 4 \
@@ -134,7 +134,7 @@ python experiment.py  \
 	--utilization 1.25 \
 	--serviceTimeModel random.expovariate \
 	--replicationFactor 3 \
-	--rateInterval  20\
+	--rateInterval  10\
 	--cubicC 0.000004\
 	--cubicSmax 10\
 	--cubicBeta 0.2\
@@ -148,7 +148,7 @@ python experiment.py  \
 	--expPrefix 04_NO_BACK \
 	--simulationDuration 80000 \
 	--seed 3 \
-	--numRequests 200000\
+	--numRequests 180000\
 	--logFolder logs\
 	--expScenario base\
 	--demandSkew 0.0\

@@ -3,3 +3,4 @@
 ./scenario_01_normal
 ./scenario_02_timevary
 ./scenario_03_protection
+./scenario_04_overload

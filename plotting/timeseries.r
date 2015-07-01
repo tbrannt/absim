@@ -3,7 +3,8 @@ require(data.table)
 
 args <- commandArgs(trailingOnly = TRUE)
 
-prefix <- args[1]
+#prefix <- args[1]
+prefix <- '03_PISC'
 
 latency <- read.table(paste("../logs/", prefix, "_Latency", sep=""))
 colnames(latency)[1] <- "ServerId"
@@ -134,16 +135,62 @@ colnames(rate)[2] <- "Timestamp"
 colnames(rate)[3] <- "ServerId"
 colnames(rate)[4] <- "Rate"
 
-rate <- rate[rate$ClientId == "Client0",]
-p1 <- ggplot(rate) +
+trim <- 100
+singleclients.rate <- rate[rate$Timestamp > trim,]
+p1 <- ggplot(singleclients.rate) +
   	geom_line(aes(y=Rate, x=Timestamp, colour=ClientId), linetype='dashed',size=1) +
  	# geom_point(aes(y=Rate, x=Timestamp, colour=ClientId), size=2) +
  	geom_smooth(aes(y=Rate, x=Timestamp, colour=ClientId), size=4) +
- 	#facet_grid(ServerId ~ .) +
+ 	facet_grid(ClientId ~ .) +
  	ggtitle(paste(prefix, "rate")) +
  	theme(text = element_text(size=15),
  		axis.text = element_text(size=20))
 ggsave(p1, file=paste(prefix, "_rate.pdf", sep=""), height=30, width=50, limitsize=FALSE)
+
+normalizedRates <- data.frame(ClientId=character(),
+                 Timestamp=integer(),
+                 Rate=double(),
+                 stringsAsFactors=FALSE)
+clients <- unique(rate[,"ClientId"])
+for (i in 1:length(clients)) {
+  clientrate <- rate[rate$ClientId==clients[i],]
+  ht = 0
+  sum = 0
+  count = 0
+  for (ii in 1:nrow(clientrate)) {
+    oldHt = ht
+    ht = as.integer(clientrate[ii, "Timestamp"] / 100) * 100
+
+    if(ht != oldHt) {
+      normalizedRates[nrow(normalizedRates)+1,] <- c(clientrate[1, "ClientId"], oldHt, sum / count)
+      sum = 0
+      count = 0
+    }
+
+    count = count + 1
+    sum = sum + clientrate[ii, "Rate"]
+  }
+  if(ht != oldHt) {
+    normalizedRates[nrow(normalizedRates)+1,] <- c(clientrate[1, "ClientId"], as.integer(clientrate[ii, "Timestamp"] / 100) * 100, sum / count)
+    sum = 0
+    count = 0
+  }
+}
+
+normalizedRates.agg <- data.table(normalizedRates)
+normalizedRates.agg <- normalizedRates.agg[,sum(Rate),by=list(Timestamp)]
+normalizedRates.agg[,role:=c('clients')]
+server.rate.agg[,role:=c('servers')]
+normalizedRates.agg <- rbind(normalizedRates.agg, server.rate.agg)
+p1 <- ggplot(normalizedRates.agg) +
+  	geom_line(aes(y=V1, x=Timestamp, color=role), size=5) +
+ 	# geom_point(aes(y=Rate, x=Timestamp, colour=ClientId), size=2) +
+ 	# geom_smooth(aes(y=V1, x=Timestamp), size=4) +
+ 	#facet_grid(ServerId ~ .) +
+ 	ggtitle(paste(prefix, "rate")) +
+ 	theme(text = element_text(size=15),
+ 		axis.text = element_text(size=20))
+ggsave(p1, file=paste(prefix, "_rates.pdf", sep=""), height=30, width=50, limitsize=FALSE)
 
 
 # rate <- read.table(paste("../logs/", prefix, "_ReceiveRate", sep=""))

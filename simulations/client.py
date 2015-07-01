@@ -415,17 +415,14 @@ class Client():
         if (self.piscesUpdateCountdown == 0):
             self.responseTimeSum += metricMap["responseTime"]
             respT = self.responseTimeSum / (self.piscesUpdateWindowSize + 1)
-            print "time now: ", Simulation.now(), "self.responseTimeSum", self.responseTimeSum, "respT", respT
-            print  "rate old: ", self.rateLimiters[replica].rate
 
             self.rateLimiters[replica].rate = (1 - self.piscesAlpha) * self.rateLimiters[replica].rate + \
                     self.piscesAlpha * self.rateLimiters[replica].rate * self.desiredRtt / respT
-            minRate = 0.01 # server rate (0.25) * server concurrency (4) / client count (10) - a bit
-            maxRate = 3 # server rate (0.25) * server concurrency (4) + a bit
+            minRate = 0.1 # server rate (0.25) * server concurrency (4) / client count (10) - a bit
+            maxRate = 10 # fall 4 server, 4 clients.. server rate (0.25) * rateInterval (10) * wieder mal 4, da bei 4client4serv im extremfall nur 1 client sendet
             self.rateLimiters[replica].rate = max(self.rateLimiters[replica].rate, minRate)
             self.rateLimiters[replica].rate = min(self.rateLimiters[replica].rate, maxRate)
 
-            print  "rate new: ", self.rateLimiters[replica].rate
             assert (self.rateLimiters[replica].rate > 0)
             alphaObservation = (replica.id,
                                 self.rateLimiters[replica].rate)

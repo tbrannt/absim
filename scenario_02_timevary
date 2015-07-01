@@ -19,7 +19,7 @@ python experiment.py  \
 	--serviceTimeModel random.expovariate \
 	--replicationFactor 3 \
 	--backpressure \
-	--rateInterval  20\
+	--rateInterval  10\
 	--cubicC 0.000004\
 	--cubicSmax 10\
 	--cubicBeta 0.2\
@@ -59,7 +59,7 @@ python experiment.py  \
 	--backpressure \
 	--backpressureStrategy fast \
 	--requestCountEquilibrium 2 \
-	--rateInterval  20\
+	--rateInterval  10\
 	--cubicC 0.000004\
 	--cubicSmax 10\
 	--cubicBeta 0.2\
@@ -100,7 +100,7 @@ python experiment.py  \
 	--backpressureStrategy pisces \
 	--desiredRtt 60.0 \
 	--piscesAlpha 0.1\
-	--rateInterval  1\
+	--rateInterval  10\
 	--cubicC 0.000004\
 	--cubicSmax 10\
 	--cubicBeta 0.2\
@@ -137,7 +137,7 @@ python experiment.py  \
 	--utilization 0.60 \
 	--serviceTimeModel random.expovariate \
 	--replicationFactor 3 \
-	--rateInterval  20\
+	--rateInterval  10\
 	--cubicC 0.000004\
 	--cubicSmax 10\
 	--cubicBeta 0.2\
