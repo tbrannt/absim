@@ -3,8 +3,7 @@ require(data.table)
 
 args <- commandArgs(trailingOnly = TRUE)
 
-#prefix <- args[1]
-prefix <- '03_PISC'
+prefix <- args[1]
 
 latency <- read.table(paste("../logs/", prefix, "_Latency", sep=""))
 colnames(latency)[1] <- "ServerId"
