@@ -3,7 +3,8 @@ require(data.table)
 
 args <- commandArgs(trailingOnly = TRUE)
 
-prefix <- args[1]
+#prefix <- args[1]
+prefix <- '04_PISC' # TODO: delete
 
 latency <- read.table(paste("../logs/", prefix, "_Latency", sep=""))
 colnames(latency)[1] <- "ServerId"
@@ -34,10 +35,12 @@ colnames(act.mon)[1] <- "ServerId"
 colnames(act.mon)[2] <- "Timestamp"
 colnames(act.mon)[3] <- "ActiveRequests"
 
+#trim <- 100 # TODO: delete
 wait.mon <- read.table(paste("../logs/", prefix, "_WaitMon", sep=""))
 colnames(wait.mon)[1] <- "ServerId"
 colnames(wait.mon)[2] <- "Timestamp"
 colnames(wait.mon)[3] <- "WaitingRequests"
+#wait.mon <- wait.mon[wait.mon$Timestamp > trim,] # TODO: delete
 
 pending.requests <- read.table(paste("../logs/", prefix, "_PendingRequests", sep=""))
 colnames(pending.requests)[1] <- "ClientId"
@@ -151,6 +154,7 @@ normalizedRates <- data.frame(ClientId=character(),
                  Rate=double(),
                  stringsAsFactors=FALSE)
 clients <- unique(rate[,"ClientId"])
+servers <- unique(rate[,"ServerId"])
 for (i in 1:length(clients)) {
   clientrate <- rate[rate$ClientId==clients[i],]
   ht = 0
@@ -176,8 +180,11 @@ for (i in 1:length(clients)) {
   }
 }
 
+RATE_INTERVAL <- 20
 normalizedRates.agg <- data.table(normalizedRates)
 normalizedRates.agg <- normalizedRates.agg[,sum(Rate),by=list(Timestamp)]
+normalizedRates.agg$V1 <- normalizedRates.agg$V1 * length(servers)
+normalizedRates.agg$V1 <- normalizedRates.agg$V1 / RATE_INTERVAL
 normalizedRates.agg[,role:=c('clients')]
 server.rate.agg[,role:=c('servers')]
 normalizedRates.agg <- rbind(normalizedRates.agg, server.rate.agg)
