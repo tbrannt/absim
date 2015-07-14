@@ -3,8 +3,10 @@ require(data.table)
 
 args <- commandArgs(trailingOnly = TRUE)
 
-#prefix <- args[1]
-prefix <- '04_PISC' # TODO: delete
+prefix <- args[1]
+CONCURRENCY <- 4
+SHADOW_READ_RATION <- 0.1
+REPLICATION_FACTOR <- 3
 
 latency <- read.table(paste("../logs/", prefix, "_Latency", sep=""))
 colnames(latency)[1] <- "ServerId"
@@ -106,8 +108,8 @@ p1 <- ggplot(latency.samples) +
 ggsave(p1, file=paste(prefix, "_latency.samples.pdf", sep=""), width=15)
 
 server.rate <- data.table(server.rate)
-CONCURRENCY <- 4
 server.rate.agg <- server.rate[,sum(ServerRate * CONCURRENCY),by=list(Timestamp)]
+server.rate.agg$V1 <- server.rate.agg$V1 / (SHADOW_READ_RATION * (REPLICATION_FACTOR - 1) + 1)
 
 p1 <- ggplot(server.rate.agg[server.rate.agg$Timestamp < 10000,]) + 
 	  geom_point(aes(y=V1, x=Timestamp), size=2) + 
@@ -138,16 +140,27 @@ colnames(rate)[3] <- "ServerId"
 colnames(rate)[4] <- "Rate"
 
 trim <- 100
-singleclients.rate <- rate[rate$Timestamp > trim,]
-p1 <- ggplot(singleclients.rate) +
-  	geom_line(aes(y=Rate, x=Timestamp, colour=ClientId), linetype='dashed',size=1) +
- 	# geom_point(aes(y=Rate, x=Timestamp, colour=ClientId), size=2) +
- 	geom_smooth(aes(y=Rate, x=Timestamp, colour=ClientId), size=4) +
- 	facet_grid(ClientId ~ .) +
- 	ggtitle(paste(prefix, "rate")) +
- 	theme(text = element_text(size=15),
- 		axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_rate.pdf", sep=""), height=30, width=50, limitsize=FALSE)
+per_client.rate <- rate[rate$ServerId == 0,]
+#per_client.rate <- per_client.rate[rate$Timestamp > trim,]
+p1 <- ggplot(per_client.rate) +
+	geom_line(aes(y=Rate, x=Timestamp, colour=ClientId), linetype='dashed',size=1) +
+	geom_smooth(aes(y=Rate, x=Timestamp, colour=ClientId), size=4) +
+	facet_grid(ClientId ~ .) +
+	ggtitle(paste(prefix, "Server0 Rates")) +
+	theme(text = element_text(size=15),
+		axis.text = element_text(size=20))
+ggsave(p1, file=paste(prefix, "_per_client_rate.pdf", sep=""), height=30, width=50, limitsize=FALSE)
+
+per_server.rate <- rate[rate$ClientId == "Client0",]
+#per_server.rate <- per_server.rate[rate$Timestamp > trim,]
+p1 <- ggplot(per_server.rate) +
+	geom_line(aes(y=Rate, x=Timestamp, colour=ServerId), linetype='dashed',size=1) +
+	geom_smooth(aes(y=Rate, x=Timestamp, colour=ServerId), size=4) +
+	facet_grid(ServerId ~ .) +
+	ggtitle(paste(prefix, "Client0 Rates")) +
+	theme(text = element_text(size=15),
+		axis.text = element_text(size=20))
+ggsave(p1, file=paste(prefix, "_per_server_rate.pdf", sep=""), height=30, width=50, limitsize=FALSE)
 
 normalizedRates <- data.frame(ClientId=character(),
                  Timestamp=integer(),
