@@ -56,8 +56,7 @@ python experiment.py  \
 	--serviceTimeModel random.expovariate \
 	--replicationFactor 3 \
 	--backpressure \
-	--backpressureStrategy fast \
-	--requestCountEquilibrium 2 \
+	--backpressureStrategy bic \
 	--rateInterval  20\
 	--cubicC 0.000004\
 	--cubicSmax 10\
@@ -69,7 +68,7 @@ python experiment.py  \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
-	--expPrefix 04_FAST \
+	--expPrefix 04_BIC \
 	--simulationDuration 80000 \
 	--seed 3 \
 	--numRequests 180000\
@@ -168,7 +167,7 @@ cd plotting;
 # Rscript timeseries.r LOR;
 # Rscript timeseries.r pendingXserviceTime;
 Rscript timeseries.r 04_C3;
-Rscript timeseries.r 04_FAST;
+Rscript timeseries.r 04_BIC;
 Rscript timeseries.r 04_PISC;
 Rscript timeseries.r 04_NO_BACK;
 cd ..

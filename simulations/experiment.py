@@ -101,7 +101,7 @@ def runExperiment(args):
                                  resourceCapacity=args.serverConcurrency,
                                  serviceTime=(args.serviceTime),
                                  serviceTimeModel=args.serviceTimeModel)
-            mup = muUpdater.MuUpdater(serv, 1000,
+            mup = muUpdater.MuUpdater(serv, 200,
                                       args.serviceTime,
                                       1,
                                       serverRateMonitor)

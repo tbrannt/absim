@@ -84,7 +84,21 @@ class Client():
         self.hysterisisFactor = hysterisisFactor
 
         # Parameters for fast/pisces
-        self.minRttObserved = -1;
+        self.PISCES_MIN_RATE = 0.1
+        self.PISCES_MAX_RATE = 100
+        self.fastMinRttObserved = -1
+
+        # Parameters for BIC
+        # Constants
+        self.BIC_MIN_INCREMENT = 0.1
+        self.BIC_MAX_INCREMENT = 50
+        self.BIC_DECREASE_FACTOR = 0.85
+        self.BIC_SLOW_START_START = self.BIC_MIN_INCREMENT * 2
+        # variables
+        self.bicMax = {node: -1 for node in serverList}
+        self.bicMin = {node: self.rateLimiters[node].tokens for node in serverList}
+        self.bicSlowStartInc = {node: self.BIC_SLOW_START_START for node in serverList}
+        self.bicLastRateChange = {node: 0 for node in serverList}
 
         # Backpressure related initialization
         if (backpressure is True):
@@ -393,15 +407,15 @@ class Client():
         self.receiveRateMonitor.observe("%s %s" % receiveRateObs)
 
     def updateRatesFast(self, replica, metricMap, task):
-        if (self.minRttObserved == -1):
-            self.minRttObserved = metricMap["responseTime"]
+        if (self.fastMinRttObserved == -1):
+            self.fastMinRttObserved = metricMap["responseTime"]
         else:
-            self.minRttObserved = min(metricMap["responseTime"], \
-                    self.minRttObserved)
+            self.fastMinRttObserved = min(metricMap["responseTime"], \
+                    self.fastMinRttObserved)
 
         self.rateLimiters[replica].rate = self.rateLimiters[replica].rate * \
-                    self.minRttObserved / metricMap["responseTime"] + \
-                    self.requestCountEquilibrium / self.minRttObserved
+                    self.fastMinRttObserved / metricMap["responseTime"] + \
+                    self.requestCountEquilibrium / self.fastMinRttObserved
 
         assert (self.rateLimiters[replica].rate > 0)
         alphaObservation = (replica.id,
@@ -418,10 +432,8 @@ class Client():
 
             self.rateLimiters[replica].rate = (1 - self.piscesAlpha) * self.rateLimiters[replica].rate + \
                     self.piscesAlpha * self.rateLimiters[replica].rate * self.desiredRtt / respT
-            minRate = 0.1 # server rate (0.25) * server concurrency (4) / client count (10) - a bit
-            maxRate = 10 # fall 4 server, 4 clients.. server rate (0.25) * rateInterval (10) * wieder mal 4, da bei 4client4serv im extremfall nur 1 client sendet
-            self.rateLimiters[replica].rate = max(self.rateLimiters[replica].rate, minRate)
-            self.rateLimiters[replica].rate = min(self.rateLimiters[replica].rate, maxRate)
+            self.rateLimiters[replica].rate = max(self.rateLimiters[replica].rate, self.PISCES_MIN_RATE)
+            self.rateLimiters[replica].rate = min(self.rateLimiters[replica].rate, self.PISCES_MAX_RATE)
 
             assert (self.rateLimiters[replica].rate > 0)
             alphaObservation = (replica.id,
@@ -435,6 +447,45 @@ class Client():
         else:
             self.responseTimeSum += metricMap["responseTime"]
             self.piscesUpdateCountdown -= 1
+
+    def updateRatesBIC(self, replica, metricMap, task):
+        hysterisisFactor = self.hysterisisFactor
+        currentSendingRate = self.rateLimiters[replica].rate
+        currentReceiveRate = self.receiveRate[replica].getRate()
+        now = Simulation.now()
+
+        # update rate once every rate interval * hysterisis factor
+        if(now - self.bicLastRateChange[replica] > self.rateInterval * hysterisisFactor):
+            self.bicLastRateChange[replica] = now
+            if(currentSendingRate > currentReceiveRate):
+                # decrease
+                self.bicMax[replica] = self.bicMin[replica]
+                self.bicMin[replica] = self.bicMin[replica] * self.BIC_DECREASE_FACTOR
+                self.rateLimiters[replica].rate = self.bicMin[replica]
+            else:
+                # increase if sendingrate < or = rec. rate
+                if(self.bicMax[replica] == -1):
+                    target = self.bicMin[replica] + self.bicSlowStartInc[replica]
+                    self.bicSlowStartInc[replica] = min(self.bicSlowStartInc[replica] * 2, self.BIC_MAX_INCREMENT)
+                else:
+                    target = (self.bicMax[replica] - self.bicMin[replica]) / 2
+                    # Back to slow start / max probing
+                    if(target - self.bicMin[replica] <= self.BIC_MIN_INCREMENT):
+                        self.bicSlowStartInc[replica] = self.BIC_SLOW_START_START
+                        self.bicMax[replica] = -1
+
+                target = min(target, self.bicMin[replica] + self.BIC_MAX_INCREMENT)
+                target = max(target, self.bicMin[replica] + self.BIC_MIN_INCREMENT)
+                self.rateLimiters[replica].rate = target
+                self.bicMin[replica] = target
+
+        assert (self.rateLimiters[replica].rate > 0)
+        alphaObservation = (replica.id,
+                            self.rateLimiters[replica].rate)
+        receiveRateObs = (replica.id,
+                          self.receiveRate[replica].getRate())
+        self.rateMonitor.observe("%s %s" % alphaObservation)
+        self.receiveRateMonitor.observe("%s %s" % receiveRateObs)
 
 class DeliverMessageWithDelay(Simulation.Process):
     def __init__(self):
@@ -487,6 +538,8 @@ class ResponseHandler(Simulation.Process):
                 client.updateRatesFast(replicaThatServed, metricMap, task)
             if(client.backpressureStrategy == "pisces"):
                 client.updateRatesPisces(replicaThatServed, metricMap, task)
+            if(client.backpressureStrategy == "bic"):
+                client.updateRatesBIC(replicaThatServed, metricMap, task)
 
         client.lastSeen[replicaThatServed] = Simulation.now()
 
