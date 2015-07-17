@@ -8,6 +8,7 @@ import constants
 import numpy
 import sys
 import muUpdater
+import synchronizedMuUpdater
 
 
 def printMonitorTimeSeriesToFile(fileDesc, prefix, monitor):
@@ -179,6 +180,26 @@ def runExperiment(args):
             Simulation.activate(mup, mup.run(), at=0.0)
             muUpdaters.append(mup)
             servers.append(serv)
+    elif(args.expScenario == "syncTimeVaryingServiceTimeServers"):
+        assert args.intervalParam != 0.0
+        assert args.timeVaryingDrift != 0.0
+
+        # Monitor to track service rates
+        serverRateMonitor = Simulation.Monitor(name="ServerRateMonitor")
+
+        # Start the servers
+        for i in range(args.numServers):
+            serv = server.Server(i,
+                                 resourceCapacity=args.serverConcurrency,
+                                 serviceTime=(args.serviceTime),
+                                 serviceTimeModel=args.serviceTimeModel)
+            mup = synchronizedMuUpdater.SynchronizedMuUpdater(serv, args.intervalParam,
+                                      args.serviceTime,
+                                      args.timeVaryingDrift,
+                                      serverRateMonitor)
+            Simulation.activate(mup, mup.run(), at=0.0)
+            muUpdaters.append(mup)
+            servers.append(serv)
     else:
         print "Unknown experiment scenario"
         sys.exit(-1)
@@ -246,7 +267,8 @@ def runExperiment(args):
         print serviceRatePerServer
         arrivalRate = (args.utilization * sum(serviceRatePerServer))
         interArrivalTime = 1/float(arrivalRate)
-    elif(args.expScenario == "timeVaryingServiceTimeServers"):
+    elif(args.expScenario == "timeVaryingServiceTimeServers" or \
+            args.expScenario == "syncTimeVaryingServiceTimeServers"):
         mu = 1/float(args.serviceTime)
         mu_dot_D = mu * args.timeVaryingDrift
         avg_mu = (mu + mu_dot_D)/2.0

@@ -35,7 +35,7 @@ python experiment.py  \
 	--seed 3 \
 	--numRequests 20000\
 	--logFolder logs\
-	--expScenario timeVaryingServiceTimeServers\
+	--expScenario syncTimeVaryingServiceTimeServers\
 	--demandSkew 0.0\
 	--highDemandFraction 0.0\
 	--slowServerFraction 0.0\
@@ -74,7 +74,7 @@ python experiment.py  \
 	--seed 3 \
 	--numRequests 20000\
 	--logFolder logs\
-	--expScenario timeVaryingServiceTimeServers\
+	--expScenario syncTimeVaryingServiceTimeServers\
 	--demandSkew 0.0\
 	--highDemandFraction 0.0\
 	--slowServerFraction 0.0\
@@ -115,7 +115,7 @@ python experiment.py  \
 	--seed 3 \
 	--numRequests 20000\
 	--logFolder logs\
-	--expScenario timeVaryingServiceTimeServers\
+	--expScenario syncTimeVaryingServiceTimeServers\
 	--demandSkew 0.0\
 	--highDemandFraction 0.0\
 	--slowServerFraction 0.0\
@@ -152,7 +152,7 @@ python experiment.py  \
 	--seed 3 \
 	--numRequests 20000\
 	--logFolder logs\
-	--expScenario timeVaryingServiceTimeServers\
+	--expScenario syncTimeVaryingServiceTimeServers\
 	--demandSkew 0.0\
 	--highDemandFraction 0.0\
 	--slowServerFraction 0.0\
