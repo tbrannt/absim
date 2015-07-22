@@ -124,7 +124,7 @@ ggsave(p1, file=paste(prefix, "_server.rate.png", sep=""), width=15)
 #	  ggtitle(paste(prefix, "Server Servicetimes")) +
 #	  theme(text = element_text(size=15), 
 #	  		axis.text = element_text(size=20))
-#ggsave(p1, file=paste(prefix, "_server.serviceTime.pdf", sep=""), width=15)
+#ggsave(p1, file=paste(prefix, "_server.serviceTime.png", sep=""), width=15)
 
 p1 <- ggplot(server.serviceTime) +
 	  geom_point(aes(y=ServiceTime, x=Timestamp, colour=ServerId), size=2) +
@@ -209,7 +209,7 @@ p1 <- ggplot(normalizedRates.agg) +
  	ggtitle(paste(prefix, "rate")) +
  	theme(text = element_text(size=15),
  		axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_rates.pdf", sep=""), height=30, width=50, limitsize=FALSE)
+ggsave(p1, file=paste(prefix, "_rates.png", sep=""), height=30, width=50, limitsize=FALSE)
 
 
 # rate <- read.table(paste("../logs/", prefix, "_ReceiveRate", sep=""))

@@ -9,8 +9,8 @@ python -m unittest discover . '*test*.py'
 # # # python -m cProfile -o output.txt experiment.py \"
 
 python experiment.py  \
-	--numClients 4 \
-	--numServers 4 \
+	--numClients 10 \
+	--numServers 5 \
 	--numWorkload 200 \
 	--workloadModel poisson \
 	--serverConcurrency 4 \
@@ -46,8 +46,8 @@ python experiment.py  \
 	--batchSizeParam 1;
 
 python experiment.py  \
-	--numClients 4 \
-	--numServers 4 \
+	--numClients 10 \
+	--numServers 5 \
 	--numWorkload 200 \
 	--workloadModel poisson \
 	--serverConcurrency 4 \
@@ -84,8 +84,8 @@ python experiment.py  \
 	--batchSizeParam 1;
 
 python experiment.py  \
-	--numClients 4 \
-	--numServers 4 \
+	--numClients 10 \
+	--numServers 5 \
 	--numWorkload 200 \
 	--workloadModel poisson \
 	--serverConcurrency 4 \
@@ -124,8 +124,8 @@ python experiment.py  \
 	--batchSizeParam 1;
 
 python experiment.py  \
-	--numClients 4 \
-	--numServers 4 \
+	--numClients 10 \
+	--numServers 5 \
 	--numWorkload 200 \
 	--workloadModel poisson \
 	--serverConcurrency 4 \
