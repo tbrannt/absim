@@ -81,7 +81,7 @@ p1 <- ggplot(act.mon) +
 	  ggtitle(paste(prefix, "Act")) +
 	  theme(text = element_text(size=15), 
 	  		axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_act.mon.pdf", sep=""), width=15)
+ggsave(p1, file=paste(prefix, "_act.mon.png", sep=""), width=15)
 
 p1 <- ggplot(wait.mon[wait.mon$ServerId < 5,]) + 
 	  geom_line(aes(y=WaitingRequests, x=Timestamp), size=2) + 
@@ -89,7 +89,7 @@ p1 <- ggplot(wait.mon[wait.mon$ServerId < 5,]) +
 	  # ggtitle(paste(prefix, "Wait")) +
 	  theme(text = element_text(size=15), 
 	  		axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_wait.mon.pdf", sep=""), width=15)
+ggsave(p1, file=paste(prefix, "_wait.mon.png", sep=""), width=15)
 
 p1 <- ggplot(pending.requests[pending.requests$ClientId == "Client0",]) + 
 	  geom_point(aes(y=PendingRequests, x=Timestamp), size=4) + 
@@ -97,7 +97,7 @@ p1 <- ggplot(pending.requests[pending.requests$ClientId == "Client0",]) +
 	  ggtitle(paste(prefix, "Pending")) +
 	  theme(text = element_text(size=15), 
 	  		axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_pending.requests.pdf", sep=""), width=15)
+ggsave(p1, file=paste(prefix, "_pending.requests.png", sep=""), width=15)
 
 p1 <- ggplot(latency.samples) + 
 	  geom_point(aes(y=LatencySample, x=Timestamp, colour=ClientId), size=2) + 
@@ -105,7 +105,7 @@ p1 <- ggplot(latency.samples) +
 	  ggtitle(paste(prefix, "Latency Samples")) +
 	  theme(text = element_text(size=15), 
 	  		axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_latency.samples.pdf", sep=""), width=15)
+ggsave(p1, file=paste(prefix, "_latency.samples.png", sep=""), width=15)
 
 server.rate <- data.table(server.rate)
 server.rate.agg <- server.rate[,sum(ServerRate * CONCURRENCY),by=list(Timestamp)]
@@ -116,7 +116,7 @@ p1 <- ggplot(server.rate.agg[server.rate.agg$Timestamp < 10000,]) +
 	  ggtitle(paste(prefix, "Server Rate")) +
 	  theme(text = element_text(size=15), 
 	  		axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_server.rate.pdf", sep=""), width=15)
+ggsave(p1, file=paste(prefix, "_server.rate.png", sep=""), width=15)
 
 #hier server rate vs client rate..
 #p1 <- ggplot(server.rate.agg[server.rate.agg$Timestamp < 10000,]) + 
@@ -131,7 +131,7 @@ p1 <- ggplot(server.serviceTime) +
 	  ggtitle(paste(prefix, "Server Actual Servicetimes")) +
 	  theme(text = element_text(size=15),
 			axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_server.actualServiceTime.pdf", sep=""), width=15)
+ggsave(p1, file=paste(prefix, "_server.actualServiceTime.png", sep=""), width=15)
 
 rate <- read.table(paste("../logs/", prefix, "_Rate", sep=""))
 colnames(rate)[1] <- "ClientId"
@@ -149,7 +149,7 @@ p1 <- ggplot(per_client.rate) +
 	ggtitle(paste(prefix, "Server0 Rates")) +
 	theme(text = element_text(size=15),
 		axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_per_client_rate.pdf", sep=""), height=30, width=50, limitsize=FALSE)
+ggsave(p1, file=paste(prefix, "_per_client_rate.png", sep=""), height=30, width=50, limitsize=FALSE)
 
 per_server.rate <- rate[rate$ClientId == "Client0",]
 #per_server.rate <- per_server.rate[rate$Timestamp > trim,]
@@ -160,7 +160,7 @@ p1 <- ggplot(per_server.rate) +
 	ggtitle(paste(prefix, "Client0 Rates")) +
 	theme(text = element_text(size=15),
 		axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_per_server_rate.pdf", sep=""), height=30, width=50, limitsize=FALSE)
+ggsave(p1, file=paste(prefix, "_per_server_rate.png", sep=""), height=30, width=50, limitsize=FALSE)
 
 normalizedRates <- data.frame(ClientId=character(),
                  Timestamp=integer(),
