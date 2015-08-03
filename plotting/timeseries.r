@@ -205,13 +205,13 @@ server.rate.agg[,role:=c('servers')]
 normalizedRates.agg <- rbind(normalizedRates.agg, server.rate.agg)
 png(paste(prefix, "_rates.png", sep=""), height=2096, width=4500)
 ggplot(normalizedRates.agg) +
-  	geom_line(aes(y=V1, x=Timestamp, color=role), size=5) +
- 	# geom_point(aes(y=Rate, x=Timestamp, colour=ClientId), size=2) +
- 	# geom_smooth(aes(y=V1, x=Timestamp), size=4) +
- 	#facet_grid(ServerId ~ .) +
- 	ggtitle(paste(prefix, "rate")) +
- 	theme(text = element_text(size=15),
- 		axis.text = element_text(size=20))
+	geom_line(aes(y=V1, x=Timestamp, color=role), size=5) +
+	# geom_point(aes(y=Rate, x=Timestamp, colour=ClientId), size=2) +
+	# geom_smooth(aes(y=V1, x=Timestamp), size=4) +
+	#facet_grid(ServerId ~ .) +
+	ggtitle(paste(prefix, "rate")) +
+	theme(text = element_text(size=90),
+		axis.text = element_text(size=90))
 dev.off()
 
 # rate <- read.table(paste("../logs/", prefix, "_ReceiveRate", sep=""))
