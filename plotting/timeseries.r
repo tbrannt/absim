@@ -7,6 +7,7 @@ prefix <- args[1]
 CONCURRENCY <- 4
 SHADOW_READ_RATION <- 0.1
 REPLICATION_FACTOR <- 3
+RATE_INTERVAL <- 20
 
 latency <- read.table(paste("../logs/", prefix, "_Latency", sep=""))
 colnames(latency)[1] <- "ServerId"
@@ -142,25 +143,27 @@ colnames(rate)[4] <- "Rate"
 trim <- 100
 per_client.rate <- rate[rate$ServerId == 0,]
 #per_client.rate <- per_client.rate[rate$Timestamp > trim,]
-p1 <- ggplot(per_client.rate) +
-	geom_line(aes(y=Rate, x=Timestamp, colour=ClientId), linetype='dashed',size=1) +
-	geom_smooth(aes(y=Rate, x=Timestamp, colour=ClientId), size=4) +
+png(paste(prefix, "_per_client_rate.png", sep=""), height=2096, width=2096)
+ggplot(per_client.rate) +
+	geom_line(aes(y=Rate, x=Timestamp, colour=ClientId), size=1) +
+	geom_smooth(aes(y=Rate, x=Timestamp, colour=ClientId), linetype='dashed', size=2) +
 	facet_grid(ClientId ~ .) +
 	ggtitle(paste(prefix, "Server0 Rates")) +
-	theme(text = element_text(size=15),
-		axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_per_client_rate.png", sep=""), height=30, width=50, limitsize=FALSE)
+	theme(text = element_text(size=40),
+		axis.text = element_text(size=40))
+dev.off()
 
 per_server.rate <- rate[rate$ClientId == "Client0",]
 #per_server.rate <- per_server.rate[rate$Timestamp > trim,]
-p1 <- ggplot(per_server.rate) +
-	geom_line(aes(y=Rate, x=Timestamp, colour=ServerId), linetype='dashed',size=1) +
-	geom_smooth(aes(y=Rate, x=Timestamp, colour=ServerId), size=4) +
+png(paste(prefix, "_per_server_rate.png", sep=""), height=2096, width=2096)
+ggplot(per_server.rate) +
+	geom_line(aes(y=Rate, x=Timestamp, colour=ServerId), size=1) +
+	geom_smooth(aes(y=Rate, x=Timestamp, colour=ServerId), linetype='dashed', size=2) +
 	facet_grid(ServerId ~ .) +
 	ggtitle(paste(prefix, "Client0 Rates")) +
-	theme(text = element_text(size=15),
-		axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_per_server_rate.png", sep=""), height=30, width=50, limitsize=FALSE)
+	theme(text = element_text(size=40),
+		axis.text = element_text(size=40))
+dev.off()
 
 normalizedRates <- data.frame(ClientId=character(),
                  Timestamp=integer(),
@@ -193,7 +196,6 @@ for (i in 1:length(clients)) {
   }
 }
 
-RATE_INTERVAL <- 20
 normalizedRates.agg <- data.table(normalizedRates)
 normalizedRates.agg <- normalizedRates.agg[,sum(Rate),by=list(Timestamp)]
 normalizedRates.agg$V1 <- normalizedRates.agg$V1 * length(servers)
@@ -201,7 +203,8 @@ normalizedRates.agg$V1 <- normalizedRates.agg$V1 / RATE_INTERVAL
 normalizedRates.agg[,role:=c('clients')]
 server.rate.agg[,role:=c('servers')]
 normalizedRates.agg <- rbind(normalizedRates.agg, server.rate.agg)
-p1 <- ggplot(normalizedRates.agg) +
+png(paste(prefix, "_rates.png", sep=""), height=2096, width=4500)
+ggplot(normalizedRates.agg) +
   	geom_line(aes(y=V1, x=Timestamp, color=role), size=5) +
  	# geom_point(aes(y=Rate, x=Timestamp, colour=ClientId), size=2) +
  	# geom_smooth(aes(y=V1, x=Timestamp), size=4) +
@@ -209,8 +212,7 @@ p1 <- ggplot(normalizedRates.agg) +
  	ggtitle(paste(prefix, "rate")) +
  	theme(text = element_text(size=15),
  		axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_rates.png", sep=""), height=30, width=50, limitsize=FALSE)
-
+dev.off()
 
 # rate <- read.table(paste("../logs/", prefix, "_ReceiveRate", sep=""))
 # colnames(rate)[1] <- "ClientId"
