@@ -1,5 +1,6 @@
 require(ggplot2)
 require(data.table)
+require(grid) # unit function
 
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -68,56 +69,62 @@ colnames(server.serviceTime)[1] <- "ServerId"
 colnames(server.serviceTime)[2] <- "Timestamp"
 colnames(server.serviceTime)[3] <- "ServiceTime"
 
-p1 <- ggplot(latency) +
+png(paste(prefix, "_latency.png", sep=""), height=1024, width=1024)
+ggplot(latency) +
 	  geom_point(aes(y=Latency, x=Timestamp, colour=ClientId), size=2) +
 	  facet_grid(ClientId ~ .) +
 	  ggtitle(paste(prefix, "Latencies")) +
-	  theme(text = element_text(size=15), 
+	  theme(text = element_text(size=15),
 			axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_latency.png", sep=""), width=15)
+dev.off()
 
-p1 <- ggplot(act.mon) +
+png(paste(prefix, "_act.mon.png", sep=""), height=512, width=1024)
+ggplot(act.mon) +
 	  geom_line(aes(y=ActiveRequests, x=Timestamp), size=2) + 
 	  facet_grid(ServerId ~ .) +
 	  ggtitle(paste(prefix, "Act")) +
-	  theme(text = element_text(size=15), 
-	  		axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_act.mon.png", sep=""), width=15)
+	  theme(text = element_text(size=15),
+			axis.text = element_text(size=20))
+dev.off()
 
-p1 <- ggplot(wait.mon[wait.mon$ServerId < 5,]) + 
-	  geom_line(aes(y=WaitingRequests, x=Timestamp), size=2) + 
+png(paste(prefix, "_wait.mon.png", sep=""), height=1024, width=1024)
+ggplot(wait.mon[wait.mon$ServerId < 5,]) +
+	  geom_line(aes(y=WaitingRequests, x=Timestamp), size=2) +
 	  facet_grid(ServerId ~ .) +
-	  # ggtitle(paste(prefix, "Wait")) +
-	  theme(text = element_text(size=15), 
-	  		axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_wait.mon.png", sep=""), width=15)
+	  ggtitle(paste(prefix, "Wait")) +
+	  theme(text = element_text(size=15),
+			axis.text = element_text(size=20))
+dev.off()
 
-p1 <- ggplot(pending.requests[pending.requests$ClientId == "Client0",]) + 
-	  geom_point(aes(y=PendingRequests, x=Timestamp), size=4) + 
+png(paste(prefix, "_pending.requests.png", sep=""), height=1024, width=1024)
+ggplot(pending.requests[pending.requests$ClientId == "Client0",]) +
+	  geom_point(aes(y=PendingRequests, x=Timestamp), size=2) +
 	  facet_grid(ServerId ~ ClientId) +
 	  ggtitle(paste(prefix, "Pending")) +
-	  theme(text = element_text(size=15), 
-	  		axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_pending.requests.png", sep=""), width=15)
+	  theme(text = element_text(size=15),
+			axis.text = element_text(size=20))
+dev.off()
 
-p1 <- ggplot(latency.samples) + 
-	  geom_point(aes(y=LatencySample, x=Timestamp, colour=ClientId), size=2) + 
+png(paste(prefix, "_latency.samples.png", sep=""), height=1024, width=1536)
+ggplot(latency.samples) +
+	  geom_point(aes(y=LatencySample, x=Timestamp, colour=ClientId), size=2) +
 	  facet_grid(ServerId ~ .) +
 	  ggtitle(paste(prefix, "Latency Samples")) +
-	  theme(text = element_text(size=15), 
-	  		axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_latency.samples.png", sep=""), width=15)
+	  theme(text = element_text(size=30),
+			axis.text = element_text(size=30))
+dev.off()
 
 server.rate <- data.table(server.rate)
 server.rate.agg <- server.rate[,sum(ServerRate * CONCURRENCY),by=list(Timestamp)]
 server.rate.agg$V1 <- server.rate.agg$V1 / (SHADOW_READ_RATION * (REPLICATION_FACTOR - 1) + 1)
 
-p1 <- ggplot(server.rate.agg[server.rate.agg$Timestamp < 10000,]) + 
-	  geom_point(aes(y=V1, x=Timestamp), size=2) + 
+png(paste(prefix, "_server.rate.png", sep=""), height=512, width=512)
+ggplot(server.rate.agg[server.rate.agg$Timestamp < 10000,]) +
+	  geom_point(aes(y=V1, x=Timestamp), size=2) +
 	  ggtitle(paste(prefix, "Server Rate")) +
-	  theme(text = element_text(size=15), 
-	  		axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_server.rate.png", sep=""), width=15)
+	  theme(text = element_text(size=15),
+			axis.text = element_text(size=20))
+dev.off()
 
 #hier server rate vs client rate..
 #p1 <- ggplot(server.rate.agg[server.rate.agg$Timestamp < 10000,]) + 
@@ -127,12 +134,13 @@ ggsave(p1, file=paste(prefix, "_server.rate.png", sep=""), width=15)
 #	  		axis.text = element_text(size=20))
 #ggsave(p1, file=paste(prefix, "_server.serviceTime.png", sep=""), width=15)
 
-p1 <- ggplot(server.serviceTime) +
+png(paste(prefix, "_server.actualServiceTime.png", sep=""), height=2096, width=2096)
+ggplot(server.serviceTime) +
 	  geom_point(aes(y=ServiceTime, x=Timestamp, colour=ServerId), size=2) +
 	  ggtitle(paste(prefix, "Server Actual Servicetimes")) +
-	  theme(text = element_text(size=15),
-			axis.text = element_text(size=20))
-ggsave(p1, file=paste(prefix, "_server.actualServiceTime.png", sep=""), width=15)
+	  theme(text = element_text(size=45),
+			axis.text = element_text(size=45))
+dev.off()
 
 rate <- read.table(paste("../logs/", prefix, "_Rate", sep=""))
 colnames(rate)[1] <- "ClientId"
@@ -196,6 +204,21 @@ for (i in 1:length(clients)) {
   }
 }
 
+############################# DEBUG #####################################
+#dtrate <- data.table(rate)
+#png(paste(prefix, "_rates_anfang.png", sep=""), height=8000, width=8000)
+#ggplot(dtrate) +
+#	geom_line(aes(y=Rate, x=Timestamp), size=1) +
+#	# geom_point(aes(y=Rate, x=Timestamp, colour=ClientId), size=2) +
+#	# geom_smooth(aes(y=V1, x=Timestamp), size=4) +
+#	facet_grid(ClientId ~ .) +
+#	ggtitle(paste(prefix, "rate")) +
+#	theme(text = element_text(size=90),
+#		axis.text = element_text(size=90),
+#		legend.key.size = unit(4, "cm"))
+#dev.off()
+############################# DEBUG #####################################
+
 normalizedRates.agg <- data.table(normalizedRates)
 normalizedRates.agg <- normalizedRates.agg[,sum(Rate),by=list(Timestamp)]
 normalizedRates.agg$V1 <- normalizedRates.agg$V1 * length(servers)
@@ -205,13 +228,40 @@ server.rate.agg[,role:=c('servers')]
 normalizedRates.agg <- rbind(normalizedRates.agg, server.rate.agg)
 png(paste(prefix, "_rates.png", sep=""), height=2096, width=4500)
 ggplot(normalizedRates.agg) +
-	geom_line(aes(y=V1, x=Timestamp, color=role), size=5) +
+	geom_line(aes(y=V1, x=Timestamp, color=role), size=4) +
 	# geom_point(aes(y=Rate, x=Timestamp, colour=ClientId), size=2) +
 	# geom_smooth(aes(y=V1, x=Timestamp), size=4) +
 	#facet_grid(ServerId ~ .) +
 	ggtitle(paste(prefix, "rate")) +
 	theme(text = element_text(size=90),
-		axis.text = element_text(size=90))
+		axis.text = element_text(size=90),
+		legend.key.size = unit(4, "cm"))
+dev.off()
+
+### next way to do it..: >>> ATTENTION <<< This attempt turned out to behave not as expected and wanted.. 
+### e.g. in scenario 03 when only 3 clients are sending only the avg of these 3 clients is used 
+### to calculate the whole client demand which is wrong because the 0 rates of the other clients 
+### must have been taken into account to calculate the avg
+rate.avg <- data.table(rate)
+rate.avg$Timegroup <- as.integer(rate.avg$Timestamp / 100)
+rate.avg <- rate.avg[,mean(Rate),by=list(Timegroup)]
+rate.avg$V1 <- rate.avg$V1 * length(servers) * length(clients)
+rate.avg$V1 <- rate.avg$V1 / RATE_INTERVAL
+rate.avg[,role:=c('clients')]
+setnames(rate.avg, "Timegroup", "Timestamp")
+rate.avg$Timestamp <- rate.avg$Timestamp * 100
+server.rate.agg[,role:=c('servers')]
+rate.avg <- rbind(rate.avg, server.rate.agg)
+png(paste(prefix, "_rates2.png", sep=""), height=2096, width=4500)
+ggplot(rate.avg) +
+	geom_line(aes(y=V1, x=Timestamp, color=role), size=4) +
+	# geom_point(aes(y=Rate, x=Timestamp, colour=ClientId), size=2) +
+	# geom_smooth(aes(y=V1, x=Timestamp), size=4) +
+	#facet_grid(ServerId ~ .) +
+	ggtitle(paste(prefix, "rate")) +
+	theme(text = element_text(size=90),
+		axis.text = element_text(size=90),
+		legend.key.size = unit(4, "cm"))
 dev.off()
 
 # rate <- read.table(paste("../logs/", prefix, "_ReceiveRate", sep=""))
