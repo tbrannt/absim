@@ -337,6 +337,9 @@ def runExperiment(args):
     pendingRequestsFD = open("../%s/%s_PendingRequests" %
                              (args.logFolder,
                               args.expPrefix), 'w')
+    sentRequestsFD = open("../%s/%s_SentRequests" %
+                             (args.logFolder,
+                              args.expPrefix), 'w')
     waitMonFD = open("../%s/%s_WaitMon" % (args.logFolder,
                                            args.expPrefix), 'w')
     actMonFD = open("../%s/%s_ActMon" % (args.logFolder,
@@ -364,6 +367,9 @@ def runExperiment(args):
         printMonitorTimeSeriesToFile(pendingRequestsFD,
                                      clientNode.id,
                                      clientNode.pendingRequestsMonitor)
+        printMonitorTimeSeriesToFile(sentRequestsFD,
+                                     clientNode.id,
+                                     clientNode.sentRequestsMonitor)
         printMonitorTimeSeriesToFile(latencyTrackerFD,
                                      clientNode.id,
                                      clientNode.latencyTrackerMonitor)

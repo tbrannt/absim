@@ -24,6 +24,7 @@ class Client():
         self.REPLICA_SELECTION_STRATEGY = replicaSelectionStrategy
         self.pendingRequestsMonitor = \
             Simulation.Monitor(name="PendingRequests")
+        self.sentRequestsMonitor = Simulation.Monitor(name="SentRequests")
         self.latencyTrackerMonitor = Simulation.Monitor(name="ResponseHandler")
         self.rateMonitor = Simulation.Monitor(name="AlphaMonitor")
         self.receiveRateMonitor = Simulation.Monitor(name="ReceiveRateMonitor")
@@ -164,6 +165,8 @@ class Client():
         delay = constants.NW_LATENCY_BASE + \
             random.normalvariate(constants.NW_LATENCY_MU,
                                  constants.NW_LATENCY_SIGMA)
+
+        self.sentRequestsMonitor.observe("%s %s" % (replicaToServe.id, 1))
 
         # Immediately send out request
         messageDeliveryProcess = DeliverMessageWithDelay()

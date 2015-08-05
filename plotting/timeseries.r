@@ -6,7 +6,7 @@ args <- commandArgs(trailingOnly = TRUE)
 
 prefix <- args[1]
 CONCURRENCY <- 4
-SHADOW_READ_RATION <- 0.1
+SHADOW_READ_RATIO <- 0.1
 REPLICATION_FACTOR <- 3
 RATE_INTERVAL <- 20
 
@@ -51,6 +51,12 @@ colnames(pending.requests)[1] <- "ClientId"
 colnames(pending.requests)[2] <- "Timestamp"
 colnames(pending.requests)[3] <- "ServerId"
 colnames(pending.requests)[4] <- "PendingRequests"
+
+sent.requests <- read.table(paste("../logs/", prefix, "_SentRequests", sep=""))
+colnames(sent.requests)[1] <- "ClientId"
+colnames(sent.requests)[2] <- "Timestamp"
+colnames(sent.requests)[3] <- "ServerId"
+colnames(sent.requests)[4] <- "SentRequests"
 
 latency.samples <- read.table(paste("../logs/", prefix, "_LatencyTracker", sep=""))
 colnames(latency.samples)[1] <- "ClientId"
@@ -116,10 +122,9 @@ dev.off()
 
 server.rate <- data.table(server.rate)
 server.rate.agg <- server.rate[,sum(ServerRate * CONCURRENCY),by=list(Timestamp)]
-server.rate.agg$V1 <- server.rate.agg$V1 / (SHADOW_READ_RATION * (REPLICATION_FACTOR - 1) + 1)
 
 png(paste(prefix, "_server.rate.png", sep=""), height=512, width=512)
-ggplot(server.rate.agg[server.rate.agg$Timestamp < 10000,]) +
+ggplot(server.rate.agg) +
 	  geom_point(aes(y=V1, x=Timestamp), size=2) +
 	  ggtitle(paste(prefix, "Server Rate")) +
 	  theme(text = element_text(size=15),
@@ -219,13 +224,27 @@ for (i in 1:length(clients)) {
 #dev.off()
 ############################# DEBUG #####################################
 
+### prepare actual client rate from pending request log #################
+rate.actual <- data.table(sent.requests)
+rate.actual$Timegroup <- as.integer(rate.actual$Timestamp / 100)
+rate.actual <- rate.actual[,length(SentRequests),by=list(Timegroup)] # oder sum
+### TAKE CARE: the server rates are per 1 ms so here we have to divide the number of requests
+### by 100 to get for the 100 timeunits interval the number of sent requests per time unit
+rate.actual$V1 <- rate.actual$V1 / 100
+setnames(rate.actual, "Timegroup", "Timestamp")
+rate.actual$Timestamp <- rate.actual$Timestamp * 100
+rate.actual[,role:=c('clients actual rate')]
+#########################################################################
+
+
 normalizedRates.agg <- data.table(normalizedRates)
 normalizedRates.agg <- normalizedRates.agg[,sum(Rate),by=list(Timestamp)]
 normalizedRates.agg$V1 <- normalizedRates.agg$V1 * length(servers)
 normalizedRates.agg$V1 <- normalizedRates.agg$V1 / RATE_INTERVAL
-normalizedRates.agg[,role:=c('clients')]
-server.rate.agg[,role:=c('servers')]
+normalizedRates.agg[,role:=c('clients allowed rate')]
+server.rate.agg[,role:=c('servers service rate')]
 normalizedRates.agg <- rbind(normalizedRates.agg, server.rate.agg)
+normalizedRates.agg <- rbind(normalizedRates.agg, rate.actual)
 png(paste(prefix, "_rates.png", sep=""), height=2096, width=4500)
 ggplot(normalizedRates.agg) +
 	geom_line(aes(y=V1, x=Timestamp, color=role), size=4) +
