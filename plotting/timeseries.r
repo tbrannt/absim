@@ -251,7 +251,7 @@ ggplot(normalizedRates.agg) +
 	# geom_point(aes(y=Rate, x=Timestamp, colour=ClientId), size=2) +
 	# geom_smooth(aes(y=V1, x=Timestamp), size=4) +
 	#facet_grid(ServerId ~ .) +
-	ggtitle(paste(prefix, "rate")) +
+	ggtitle(paste(prefix, "rate per ms")) +
 	theme(text = element_text(size=90),
 		axis.text = element_text(size=90),
 		legend.key.size = unit(4, "cm"))
