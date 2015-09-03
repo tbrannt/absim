@@ -80,6 +80,7 @@ ggplot(latency) +
 	  geom_point(aes(y=Latency, x=Timestamp, colour=ClientId), size=2) +
 	  facet_grid(ClientId ~ .) +
 	  ggtitle(paste(prefix, "Latencies")) +
+	  theme_bw() +
 	  theme(text = element_text(size=15),
 			axis.text = element_text(size=20))
 dev.off()
@@ -89,6 +90,7 @@ ggplot(act.mon) +
 	  geom_line(aes(y=ActiveRequests, x=Timestamp), size=2) + 
 	  facet_grid(ServerId ~ .) +
 	  ggtitle(paste(prefix, "Act")) +
+	  theme_bw() +
 	  theme(text = element_text(size=15),
 			axis.text = element_text(size=20))
 dev.off()
@@ -98,6 +100,7 @@ ggplot(wait.mon[wait.mon$ServerId < 5,]) +
 	  geom_line(aes(y=WaitingRequests, x=Timestamp), size=2) +
 	  facet_grid(ServerId ~ .) +
 	  ggtitle(paste(prefix, "Wait")) +
+	  theme_bw() +
 	  theme(text = element_text(size=15),
 			axis.text = element_text(size=20))
 dev.off()
@@ -107,6 +110,7 @@ ggplot(pending.requests[pending.requests$ClientId == "Client0",]) +
 	  geom_point(aes(y=PendingRequests, x=Timestamp), size=2) +
 	  facet_grid(ServerId ~ ClientId) +
 	  ggtitle(paste(prefix, "Pending")) +
+	  theme_bw() +
 	  theme(text = element_text(size=15),
 			axis.text = element_text(size=20))
 dev.off()
@@ -116,6 +120,7 @@ ggplot(latency.samples) +
 	  geom_point(aes(y=LatencySample, x=Timestamp, colour=ClientId), size=2) +
 	  facet_grid(ServerId ~ .) +
 	  ggtitle(paste(prefix, "Latency Samples")) +
+	  theme_bw() +
 	  theme(text = element_text(size=30),
 			axis.text = element_text(size=30))
 dev.off()
@@ -127,6 +132,7 @@ png(paste(prefix, "_server.rate.png", sep=""), height=512, width=512)
 ggplot(server.rate.agg) +
 	  geom_point(aes(y=V1, x=Timestamp), size=2) +
 	  ggtitle(paste(prefix, "Server Rate")) +
+	  theme_bw() +
 	  theme(text = element_text(size=15),
 			axis.text = element_text(size=20))
 dev.off()
@@ -143,6 +149,7 @@ png(paste(prefix, "_server.actualServiceTime.png", sep=""), height=2096, width=2
 ggplot(server.serviceTime) +
 	  geom_point(aes(y=ServiceTime, x=Timestamp, colour=ServerId), size=2) +
 	  ggtitle(paste(prefix, "Server Actual Servicetimes")) +
+	  theme_bw() +
 	  theme(text = element_text(size=45),
 			axis.text = element_text(size=45))
 dev.off()
@@ -162,6 +169,7 @@ ggplot(per_client.rate) +
 	geom_smooth(aes(y=Rate, x=Timestamp, colour=ClientId), linetype='dashed', size=2) +
 	facet_grid(ClientId ~ .) +
 	ggtitle(paste(prefix, "Server0 Rates")) +
+	theme_bw() +
 	theme(text = element_text(size=40),
 		axis.text = element_text(size=40))
 dev.off()
@@ -174,6 +182,7 @@ ggplot(per_server.rate) +
 	geom_smooth(aes(y=Rate, x=Timestamp, colour=ServerId), linetype='dashed', size=2) +
 	facet_grid(ServerId ~ .) +
 	ggtitle(paste(prefix, "Client0 Rates")) +
+	theme_bw() +
 	theme(text = element_text(size=40),
 		axis.text = element_text(size=40))
 dev.off()
@@ -252,6 +261,7 @@ ggplot(normalizedRates.agg) +
 	# geom_smooth(aes(y=V1, x=Timestamp), size=4) +
 	#facet_grid(ServerId ~ .) +
 	ggtitle(paste(prefix, "rate per ms")) +
+	theme_bw() +
 	theme(text = element_text(size=90),
 		axis.text = element_text(size=90),
 		legend.key.size = unit(4, "cm"))
@@ -278,6 +288,7 @@ ggplot(rate.avg) +
 	# geom_smooth(aes(y=V1, x=Timestamp), size=4) +
 	#facet_grid(ServerId ~ .) +
 	ggtitle(paste(prefix, "rate")) +
+	theme_bw() +
 	theme(text = element_text(size=90),
 		axis.text = element_text(size=90),
 		legend.key.size = unit(4, "cm"))
