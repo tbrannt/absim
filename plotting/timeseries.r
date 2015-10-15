@@ -75,6 +75,8 @@ colnames(server.serviceTime)[1] <- "ServerId"
 colnames(server.serviceTime)[2] <- "Timestamp"
 colnames(server.serviceTime)[3] <- "ServiceTime"
 
+trim <- 14000
+latency <- latency[latency$Timestamp < trim,]
 png(paste(prefix, "_latency.png", sep=""), height=1024, width=1024)
 ggplot(latency) +
 	  geom_point(aes(y=Latency, x=Timestamp, colour=ClientId), size=2) +
@@ -126,6 +128,18 @@ ggplot(latency.samples) +
 dev.off()
 
 server.rate <- data.table(server.rate)
+servers <- unique(server.rate[,ServerId])
+presentRate <- server.rate[1,ServerRate]
+presentTimestamp <- server.rate[1,Timestamp]
+for (i in 1:nrow(server.rate)) {
+	if(presentTimestamp != server.rate[i,Timestamp]) {
+		for(ii in servers) {
+			server.rate <- rbind(server.rate, list(0, server.rate[i,Timestamp] - 1, ii, presentRate))
+		}
+		presentTimestamp <- server.rate[i,Timestamp]
+		presentRate <- server.rate[i,ServerRate]
+	}
+}
 server.rate.agg <- server.rate[,sum(ServerRate * CONCURRENCY),by=list(Timestamp)]
 
 png(paste(prefix, "_server.rate.png", sep=""), height=512, width=512)
@@ -255,17 +269,32 @@ server.rate.agg[,role:=c('servers service rate')]
 normalizedRates.agg <- rbind(normalizedRates.agg, server.rate.agg)
 normalizedRates.agg <- rbind(normalizedRates.agg, rate.actual)
 png(paste(prefix, "_rates.png", sep=""), height=2096, width=4500)
-ggplot(normalizedRates.agg) +
-	geom_line(aes(y=V1, x=Timestamp, color=role), size=4) +
-	# geom_point(aes(y=Rate, x=Timestamp, colour=ClientId), size=2) +
-	# geom_smooth(aes(y=V1, x=Timestamp), size=4) +
-	#facet_grid(ServerId ~ .) +
-	ggtitle(paste(prefix, "rate per ms")) +
-	theme_bw() +
-	theme(text = element_text(size=90),
-		axis.text = element_text(size=90),
-		legend.key.size = unit(4, "cm"))
-dev.off()
+if(grepl('02', prefix)) {
+	print({
+		ggplot(normalizedRates.agg) +
+		geom_line(aes(y=V1, x=Timestamp, color=role), size=4) +
+		ylim(c(0, 40)) +
+		xlim(c(0, 12000)) +
+		ggtitle(paste(prefix, "rate per ms")) +
+		theme_bw() +
+		theme(text = element_text(size=90),
+			axis.text = element_text(size=90),
+			legend.key.size = unit(4, "cm"))
+	})
+	dev.off()
+} else {
+	print({
+		ggplot(normalizedRates.agg) +
+		geom_line(aes(y=V1, x=Timestamp, color=role), size=4) +
+		ggtitle(paste(prefix, "rate per ms")) +
+		theme_bw() +
+		theme(text = element_text(size=90),
+			axis.text = element_text(size=90),
+			legend.key.size = unit(4, "cm"))
+	})
+	dev.off()
+}
+
 
 ### next way to do it..: >>> ATTENTION <<< This attempt turned out to behave not as expected and wanted.. 
 ### e.g. in scenario 03 when only 3 clients are sending only the avg of these 3 clients is used 

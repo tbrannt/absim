@@ -101,6 +101,10 @@ class Client():
         self.bicSlowStartInc = {node: self.BIC_SLOW_START_START for node in serverList}
         self.bicLastRateChange = {node: 0 for node in serverList}
 
+        # Constants for AIMD
+        self.AIMD_DECREASE_FACTOR = 0.85
+        self.AIMD_INCREASE = 0.3
+
         # Backpressure related initialization
         if (backpressure is True):
             self.backpressureSchedulers = \
@@ -395,8 +399,9 @@ class Client():
 
             # So we're in here now, which means we need to back down.
             # Multiplicatively decrease the rate by a factor of beta.
+            #self.valueOfLastDecrease[replica] = currentSendingRate * 0.8 # TODO: maybe delete again
             self.valueOfLastDecrease[replica] = currentSendingRate
-            self.rateLimiters[replica].rate *= beta
+            self.rateLimiters[replica].rate *= (1 - beta)
             self.rateLimiters[replica].rate = \
                 max(self.rateLimiters[replica].rate, 0.01)
             self.lastRateDecrease[replica] = Simulation.now()
@@ -437,19 +442,19 @@ class Client():
                     self.piscesAlpha * self.rateLimiters[replica].rate * self.desiredRtt / respT
             self.rateLimiters[replica].rate = max(self.rateLimiters[replica].rate, self.PISCES_MIN_RATE)
             self.rateLimiters[replica].rate = min(self.rateLimiters[replica].rate, self.PISCES_MAX_RATE)
-
-            assert (self.rateLimiters[replica].rate > 0)
-            alphaObservation = (replica.id,
-                                self.rateLimiters[replica].rate)
-            receiveRateObs = (replica.id,
-                              self.receiveRate[replica].getRate())
-            self.rateMonitor.observe("%s %s" % alphaObservation)
-            self.receiveRateMonitor.observe("%s %s" % receiveRateObs)
             self.responseTimeSum = 0
             self.piscesUpdateCountdown = self.piscesUpdateWindowSize
         else:
             self.responseTimeSum += metricMap["responseTime"]
             self.piscesUpdateCountdown -= 1
+
+        assert (self.rateLimiters[replica].rate > 0)
+        alphaObservation = (replica.id,
+                            self.rateLimiters[replica].rate)
+        receiveRateObs = (replica.id,
+                          self.receiveRate[replica].getRate())
+        self.rateMonitor.observe("%s %s" % alphaObservation)
+        self.receiveRateMonitor.observe("%s %s" % receiveRateObs)
 
     def updateRatesBIC(self, replica, metricMap, task):
         hysterisisFactor = self.hysterisisFactor
@@ -481,6 +486,29 @@ class Client():
                 target = max(target, self.bicMin[replica] + self.BIC_MIN_INCREMENT)
                 self.rateLimiters[replica].rate = target
                 self.bicMin[replica] = target
+
+        assert (self.rateLimiters[replica].rate > 0)
+        alphaObservation = (replica.id,
+                            self.rateLimiters[replica].rate)
+        receiveRateObs = (replica.id,
+                          self.receiveRate[replica].getRate())
+        self.rateMonitor.observe("%s %s" % alphaObservation)
+        self.receiveRateMonitor.observe("%s %s" % receiveRateObs)
+
+    def updateRatesAIMD(self, replica, metricMap, task):
+        hysterisisFactor = self.hysterisisFactor
+        currentSendingRate = self.rateLimiters[replica].rate
+        currentReceiveRate = self.receiveRate[replica].getRate()
+        now = Simulation.now()
+
+        # update rate once every rate interval * hysterisis factor
+        if(now - self.bicLastRateChange[replica] > self.rateInterval * hysterisisFactor):
+            self.bicLastRateChange[replica] = now
+            if(currentSendingRate > currentReceiveRate):
+                # decrease
+                self.rateLimiters[replica].rate = self.rateLimiters[replica].rate * self.AIMD_DECREASE_FACTOR
+            else:
+                self.rateLimiters[replica].rate = self.rateLimiters[replica].rate + self.AIMD_INCREASE
 
         assert (self.rateLimiters[replica].rate > 0)
         alphaObservation = (replica.id,
@@ -543,6 +571,8 @@ class ResponseHandler(Simulation.Process):
                 client.updateRatesPisces(replicaThatServed, metricMap, task)
             if(client.backpressureStrategy == "bic"):
                 client.updateRatesBIC(replicaThatServed, metricMap, task)
+            if(client.backpressureStrategy == "aimd"):
+                client.updateRatesAIMD(replicaThatServed, metricMap, task)
 
         client.lastSeen[replicaThatServed] = Simulation.now()
 
@@ -593,6 +623,7 @@ class BackpressureScheduler(Simulation.Process):
                                                         currentTokens))
                     durationToWait = \
                         self.client.rateLimiters[replica].tryAcquire()
+
                     if (durationToWait == 0):
                         assert round(self.client.
                                      rateLimiters[replica].tokens, 9) >= 1
@@ -619,9 +650,9 @@ class BackpressureScheduler(Simulation.Process):
                     # floating-point arithmetic precision we might not have 1
                     # token and this would cause the simulation to enter an
                     # almost infinite loop. These 2 lines by-pass this problem.
-                    self.client.rateLimiters[minReplica].tokens = 1
-                    self.client.rateLimiters[minReplica].lastSent =\
-                        Simulation.now()
+                    #self.client.rateLimiters[minReplica].tokens = 1 # TODO: evtl. wieder raus..
+                    #self.client.rateLimiters[minReplica].lastSent =\
+                    #    Simulation.now()
                     minReplica = None
             else:
                 yield Simulation.waitevent, self, self.backlogReadyEvent
@@ -650,12 +681,15 @@ class RateLimiter():
     def tryAcquire(self):
         tokens = self.getTokens()
         if (round(tokens, 9) >= 1.0):
-            self.tokens = tokens
+            self.tokens = max(tokens, 1.0)
             return 0
         else:
             assert self.tokens < 1
             timetowait = (1 - tokens) * self.rateInterval/self.rate
-            return round(timetowait, 9)
+            if (round(timetowait, 9) == 0):
+                return 0.001
+            else:
+                return round(timetowait, 9)
 
     def forceUpdates(self):
         self.tokens -= 1.0

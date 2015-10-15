@@ -56,6 +56,44 @@ python experiment.py  \
 	--serviceTimeModel random.expovariate \
 	--replicationFactor 3 \
 	--backpressure \
+	--backpressureStrategy aimd \
+	--rateInterval  20\
+	--cubicC 0.000004\
+	--cubicSmax 10\
+	--cubicBeta 0.2\
+	--hysterisisFactor 2\
+	--selectionStrategy C3 \
+	--shadowReadRatio 0.1 \
+	--accessPattern uniform \
+	--nwLatencyBase 0.2 \
+	--nwLatencyMu 0.0\
+	--nwLatencySigma 0.00 \
+	--expPrefix 04_AIMD \
+	--simulationDuration 80000 \
+	--seed 3 \
+	--numRequests 180000\
+	--logFolder logs\
+	--expScenario base\
+	--demandSkew 0.0\
+	--highDemandFraction 0.0\
+	--slowServerFraction 0.0\
+	--slowServerSlowness 0.0\
+	--intervalParam 500\
+	--concurrencyWeight 10\
+	--batchSizeModel constant\
+	--batchSizeParam 1;
+
+python experiment.py  \
+	--numClients 10 \
+	--numServers 5 \
+	--numWorkload 200 \
+	--workloadModel poisson \
+	--serverConcurrency 4 \
+	--serviceTime 4 \
+	--utilization 1.25 \
+	--serviceTimeModel random.expovariate \
+	--replicationFactor 3 \
+	--backpressure \
 	--backpressureStrategy bic \
 	--rateInterval  20\
 	--cubicC 0.000004\
@@ -170,4 +208,5 @@ Rscript timeseries.r 04_C3;
 Rscript timeseries.r 04_BIC;
 Rscript timeseries.r 04_PISC;
 Rscript timeseries.r 04_NO_BACK;
+Rscript timeseries.r 04_AIMD;
 cd ..
