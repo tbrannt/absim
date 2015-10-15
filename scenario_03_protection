@@ -149,7 +149,7 @@ python experiment.py  \
 	--replicationFactor 3 \
 	--backpressure \
 	--backpressureStrategy pisces \
-	--desiredRtt 8.0 \
+	--desiredRtt 6.0 \
 	--piscesAlpha 0.1\
 	--rateInterval  20\
 	--cubicC 0.000004\
