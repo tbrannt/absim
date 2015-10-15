@@ -317,7 +317,7 @@ def runExperiment(args):
         w = workload.Workload(i + args.numWorkload, latencyMonitor,
                               clientsExtraWorkload,
                               args.workloadModel,
-                              interArrivalTime * args.numWorkload,
+                              interArrivalTime * args.numLateStartWorkload,
                               args.lateStartWorkloadNumRequests/args.numLateStartWorkload,
                               args.batchSizeModel,
                               args.batchSizeParam,
