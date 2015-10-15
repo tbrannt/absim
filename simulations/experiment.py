@@ -251,8 +251,7 @@ def runExperiment(args):
                           requestCountEquilibrium=args.requestCountEquilibrium,
                           desiredRtt=args.desiredRtt,
                           workObserver=workObserver,
-                          piscesAlpha=args.piscesAlpha,
-                          piscesUpdateWindowSize=args.piscesUpdateWindowSize)
+                          piscesAlpha=args.piscesAlpha)
         clients.append(c)
 
     # Start workload generators (analogous to YCSB)
@@ -471,8 +470,6 @@ if __name__ == '__main__':
                         type=float, default=5.0)
     parser.add_argument('--piscesAlpha', nargs='?',
                         type=float, default=0.1)
-    parser.add_argument('--piscesUpdateWindowSize', nargs='?',
-                        type=int, default=10)
     parser.add_argument('--accessPattern', nargs='?',
                         type=str, default="uniform")
     parser.add_argument('--nwLatencyBase', nargs='?',
