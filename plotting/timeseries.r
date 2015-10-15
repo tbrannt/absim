@@ -75,8 +75,8 @@ colnames(server.serviceTime)[1] <- "ServerId"
 colnames(server.serviceTime)[2] <- "Timestamp"
 colnames(server.serviceTime)[3] <- "ServiceTime"
 
-trim <- 14000
-latency <- latency[latency$Timestamp < trim,]
+#trim <- 14000
+#latency <- latency[latency$Timestamp < trim,]
 png(paste(prefix, "_latency.png", sep=""), height=1024, width=1024)
 ggplot(latency) +
 	  geom_point(aes(y=Latency, x=Timestamp, colour=ClientId), size=2) +
