@@ -131,6 +131,7 @@ server.rate <- data.table(server.rate)
 servers <- unique(server.rate[,ServerId])
 presentRate <- server.rate[1,ServerRate]
 presentTimestamp <- server.rate[1,Timestamp]
+# insert dots at the end of each service time interval to make server rate plots "quadratic"
 for (i in 1:nrow(server.rate)) {
 	if(presentTimestamp != server.rate[i,Timestamp]) {
 		for(ii in servers) {
