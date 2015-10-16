@@ -269,7 +269,19 @@ server.rate.agg[,role:=c('servers service rate')]
 normalizedRates.agg <- rbind(normalizedRates.agg, server.rate.agg)
 normalizedRates.agg <- rbind(normalizedRates.agg, rate.actual)
 png(paste(prefix, "_rates.png", sep=""), height=2096, width=4500)
-if(grepl('02', prefix)) {
+if(grepl('01', prefix)) {
+	print({
+		ggplot(normalizedRates.agg) +
+		geom_line(aes(y=V1, x=Timestamp, color=role), size=4) +
+		ylim(c(0, 25)) +
+		ggtitle(paste(prefix, "rate per ms")) +
+		theme_bw() +
+		theme(text = element_text(size=90),
+			axis.text = element_text(size=90),
+			legend.key.size = unit(4, "cm"))
+	})
+	dev.off()
+} else if(grepl('02', prefix)) {
 	print({
 		ggplot(normalizedRates.agg) +
 		geom_line(aes(y=V1, x=Timestamp, color=role), size=4) +
@@ -282,10 +294,25 @@ if(grepl('02', prefix)) {
 			legend.key.size = unit(4, "cm"))
 	})
 	dev.off()
-} else {
+} else if(grepl('03', prefix)) {
 	print({
 		ggplot(normalizedRates.agg) +
 		geom_line(aes(y=V1, x=Timestamp, color=role), size=4) +
+		ylim(c(0, 33)) +
+		xlim(c(0, 38000)) +
+		ggtitle(paste(prefix, "rate per ms")) +
+		theme_bw() +
+		theme(text = element_text(size=90),
+			axis.text = element_text(size=90),
+			legend.key.size = unit(4, "cm"))
+	})
+	dev.off()
+} else if(grepl('04', prefix)) {
+	print({
+		ggplot(normalizedRates.agg) +
+		geom_line(aes(y=V1, x=Timestamp, color=role), size=4) +
+		ylim(c(0, 15)) +
+		xlim(c(0, 45000)) +
 		ggtitle(paste(prefix, "rate per ms")) +
 		theme_bw() +
 		theme(text = element_text(size=90),
@@ -294,7 +321,6 @@ if(grepl('02', prefix)) {
 	})
 	dev.off()
 }
-
 
 ### next way to do it..: >>> ATTENTION <<< This attempt turned out to behave not as expected and wanted.. 
 ### e.g. in scenario 03 when only 3 clients are sending only the avg of these 3 clients is used 
