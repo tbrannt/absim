@@ -3,6 +3,7 @@
 date
 ./scenario_01_normal &
 ./scenario_02_timevary &
+./scenario_02_timevary_b_underutilized &
 ./scenario_03_protection &
 ./scenario_04_overload
 date

@@ -251,7 +251,8 @@ def runExperiment(args):
                           requestCountEquilibrium=args.requestCountEquilibrium,
                           desiredRtt=args.desiredRtt,
                           workObserver=workObserver,
-                          piscesAlpha=args.piscesAlpha)
+                          piscesAlpha=args.piscesAlpha,
+                          piscesBeta=args.piscesBeta)
         clients.append(c)
 
     # Start workload generators (analogous to YCSB)
@@ -317,7 +318,7 @@ def runExperiment(args):
         w = workload.Workload(i + args.numWorkload, latencyMonitor,
                               clientsExtraWorkload,
                               args.workloadModel,
-                              interArrivalTime * args.numLateStartWorkload,
+                              interArrivalTime * args.numLateStartWorkload / 3, # just even 3 times faster than the former workloads
                               args.lateStartWorkloadNumRequests/args.numLateStartWorkload,
                               args.batchSizeModel,
                               args.batchSizeParam,
@@ -470,6 +471,8 @@ if __name__ == '__main__':
                         type=float, default=5.0)
     parser.add_argument('--piscesAlpha', nargs='?',
                         type=float, default=0.1)
+    parser.add_argument('--piscesBeta', nargs='?',
+                        type=float, default=0.0)
     parser.add_argument('--accessPattern', nargs='?',
                         type=str, default="uniform")
     parser.add_argument('--nwLatencyBase', nargs='?',

@@ -7,19 +7,14 @@ python -m unittest discover . '*test*.py'
 
 # # # To profile, replace the first line with:
 # # # python -m cProfile -o output.txt experiment.py \"
-
 python experiment.py  \
 	--numClients 10 \
 	--numServers 5 \
 	--numWorkload 200 \
 	--workloadModel poisson \
-	--numLateStartWorkload 30 \
-	--lateStartWorkloadStartTime 10000 \
-	--lateStartWorkloadNumClients 3 \
-	--lateStartWorkloadNumRequests 22200 \
 	--serverConcurrency 4 \
 	--serviceTime 4 \
-	--utilization 0.70 \
+	--utilization 0.75 \
 	--serviceTimeModel random.expovariate \
 	--replicationFactor 3 \
 	--backpressure \
@@ -34,17 +29,18 @@ python experiment.py  \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
-	--expPrefix 03_C3 \
-	--simulationDuration 80000 \
+	--expPrefix 02b_C3 \
+	--simulationDuration 30000 \
 	--seed 3 \
-	--numRequests 120000\
+	--numRequests 100000\
 	--logFolder logs\
-	--expScenario base\
+	--expScenario syncTimeVaryingServiceTimeServers\
 	--demandSkew 0.0\
 	--highDemandFraction 0.0\
 	--slowServerFraction 0.0\
 	--slowServerSlowness 0.0\
-	--intervalParam 500\
+	--intervalParam 1500\
+	--timeVaryingDrift 3\
 	--concurrencyWeight 10\
 	--batchSizeModel constant\
 	--batchSizeParam 1;
@@ -54,13 +50,9 @@ python experiment.py  \
 	--numServers 5 \
 	--numWorkload 200 \
 	--workloadModel poisson \
-	--numLateStartWorkload 30 \
-	--lateStartWorkloadStartTime 10000 \
-	--lateStartWorkloadNumClients 3 \
-	--lateStartWorkloadNumRequests 22200 \
 	--serverConcurrency 4 \
 	--serviceTime 4 \
-	--utilization 0.70 \
+	--utilization 0.75 \
 	--serviceTimeModel random.expovariate \
 	--replicationFactor 3 \
 	--backpressure \
@@ -76,17 +68,18 @@ python experiment.py  \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
-	--expPrefix 03_AIMD \
-	--simulationDuration 80000 \
+	--expPrefix 02b_AIMD \
+	--simulationDuration 30000 \
 	--seed 3 \
-	--numRequests 120000\
+	--numRequests 100000\
 	--logFolder logs\
-	--expScenario base\
+	--expScenario syncTimeVaryingServiceTimeServers\
 	--demandSkew 0.0\
 	--highDemandFraction 0.0\
 	--slowServerFraction 0.0\
 	--slowServerSlowness 0.0\
-	--intervalParam 500\
+	--intervalParam 1500\
+	--timeVaryingDrift 3\
 	--concurrencyWeight 10\
 	--batchSizeModel constant\
 	--batchSizeParam 1;
@@ -96,13 +89,9 @@ python experiment.py  \
 	--numServers 5 \
 	--numWorkload 200 \
 	--workloadModel poisson \
-	--numLateStartWorkload 30 \
-	--lateStartWorkloadStartTime 10000 \
-	--lateStartWorkloadNumClients 3 \
-	--lateStartWorkloadNumRequests 22200 \
 	--serverConcurrency 4 \
 	--serviceTime 4 \
-	--utilization 0.70 \
+	--utilization 0.75 \
 	--serviceTimeModel random.expovariate \
 	--replicationFactor 3 \
 	--backpressure \
@@ -118,17 +107,18 @@ python experiment.py  \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
-	--expPrefix 03_BIC \
-	--simulationDuration 80000 \
+	--expPrefix 02b_BIC \
+	--simulationDuration 30000 \
 	--seed 3 \
-	--numRequests 120000\
+	--numRequests 100000\
 	--logFolder logs\
-	--expScenario base\
+	--expScenario syncTimeVaryingServiceTimeServers\
 	--demandSkew 0.0\
 	--highDemandFraction 0.0\
 	--slowServerFraction 0.0\
 	--slowServerSlowness 0.0\
-	--intervalParam 500\
+	--intervalParam 1500\
+	--timeVaryingDrift 3\
 	--concurrencyWeight 10\
 	--batchSizeModel constant\
 	--batchSizeParam 1;
@@ -138,20 +128,15 @@ python experiment.py  \
 	--numServers 5 \
 	--numWorkload 200 \
 	--workloadModel poisson \
-	--numLateStartWorkload 30 \
-	--lateStartWorkloadStartTime 10000 \
-	--lateStartWorkloadNumClients 3 \
-	--lateStartWorkloadNumRequests 22200 \
 	--serverConcurrency 4 \
 	--serviceTime 4 \
-	--utilization 0.70 \
+	--utilization 0.75 \
 	--serviceTimeModel random.expovariate \
 	--replicationFactor 3 \
 	--backpressure \
 	--backpressureStrategy pisces \
 	--desiredRtt 3.0 \
 	--piscesAlpha 0.1\
-	--piscesBeta 0.15\
 	--rateInterval  20\
 	--cubicC 0.000004\
 	--cubicSmax 10\
@@ -163,17 +148,18 @@ python experiment.py  \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
-	--expPrefix 03_PISC \
-	--simulationDuration 80000 \
+	--expPrefix 02b_PISC \
+	--simulationDuration 30000 \
 	--seed 3 \
-	--numRequests 120000\
+	--numRequests 100000\
 	--logFolder logs\
-	--expScenario base\
+	--expScenario syncTimeVaryingServiceTimeServers\
 	--demandSkew 0.0\
 	--highDemandFraction 0.0\
 	--slowServerFraction 0.0\
 	--slowServerSlowness 0.0\
-	--intervalParam 500\
+	--intervalParam 1500\
+	--timeVaryingDrift 3\
 	--concurrencyWeight 10\
 	--batchSizeModel constant\
 	--batchSizeParam 1;
@@ -183,13 +169,9 @@ python experiment.py  \
 	--numServers 5 \
 	--numWorkload 200 \
 	--workloadModel poisson \
-	--numLateStartWorkload 30 \
-	--lateStartWorkloadStartTime 10000 \
-	--lateStartWorkloadNumClients 3 \
-	--lateStartWorkloadNumRequests 22200 \
 	--serverConcurrency 4 \
 	--serviceTime 4 \
-	--utilization 0.70 \
+	--utilization 0.75 \
 	--serviceTimeModel random.expovariate \
 	--replicationFactor 3 \
 	--rateInterval  20\
@@ -203,17 +185,18 @@ python experiment.py  \
 	--nwLatencyBase 0.2 \
 	--nwLatencyMu 0.0\
 	--nwLatencySigma 0.00 \
-	--expPrefix 03_NO_BACK \
-	--simulationDuration 80000 \
+	--expPrefix 02b_NO_BACK \
+	--simulationDuration 30000 \
 	--seed 3 \
-	--numRequests 120000\
+	--numRequests 100000\
 	--logFolder logs\
-	--expScenario base\
+	--expScenario syncTimeVaryingServiceTimeServers\
 	--demandSkew 0.0\
 	--highDemandFraction 0.0\
 	--slowServerFraction 0.0\
 	--slowServerSlowness 0.0\
-	--intervalParam 500\
+	--intervalParam 1500\
+	--timeVaryingDrift 3\
 	--concurrencyWeight 10\
 	--batchSizeModel constant\
 	--batchSizeParam 1;
@@ -225,9 +208,9 @@ cd plotting;
 # Rscript timeseries.r ORA;
 # Rscript timeseries.r LOR;
 # Rscript timeseries.r pendingXserviceTime;
-Rscript timeseries.r 03_C3;
-Rscript timeseries.r 03_BIC;
-Rscript timeseries.r 03_PISC;
-Rscript timeseries.r 03_NO_BACK;
-Rscript timeseries.r 03_AIMD;
+Rscript timeseries.r 02b_C3;
+Rscript timeseries.r 02b_BIC;
+Rscript timeseries.r 02b_PISC;
+Rscript timeseries.r 02b_NO_BACK;
+Rscript timeseries.r 02b_AIMD;
 cd ..
