@@ -22,9 +22,10 @@ for (scenarioId in c('01', '02', '02b', '03', '04')) {
 
 		trim <- 10
 
+		print(paste('Printing statistic for', scenarioId, algo))
 		# latency <- latency[10:NROW(latency),]
 		latency <- latency[latency$Timestamp > trim,]
-		print(summary(latency[latency$Timestamp > trim,]))
+		print(summary(latency[latency$Timestamp > trim,], digits=16))
 		latency.dt <- data.table(latency)
 		lat50.by.client <- latency.dt[,quantile(Latency,c(0.50)),by=list(ClientId)]
 		lat95.by.client <- latency.dt[,quantile(Latency,c(0.95)),by=list(ClientId)]
@@ -35,8 +36,9 @@ for (scenarioId in c('01', '02', '02b', '03', '04')) {
 
 		options(width=10000)
 		print(c(prefix,
-				quantile(latency$Latency,c(0.5, 0.95, 0.99, 0.999)),
+				quantile(latency$Latency,c(0.5, 0.95, 0.99, 0.999, 0.9999, 0.99999)),
 				range50, range95, range99))
+		print(paste('Done with statistic for', scenarioId, algo))
 
 		act.mon <- read.table(paste("../logs/", prefix, "_ActMon", sep=""))
 		colnames(act.mon)[1] <- "ServerId"
