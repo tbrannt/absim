@@ -8,6 +8,8 @@ SHADOW_READ_RATIO <- 0.1
 REPLICATION_FACTOR <- 3
 RATE_INTERVAL <- 20
 
+options(digits=16) # for summary to be less a pain in the a...
+
 for (scenarioId in c('01', '02', '02b', '03', '04')) {
 	plotList <- list()
 	for (algo in c('AIMD', 'BIC', 'PISC', 'C3')) {
@@ -25,7 +27,7 @@ for (scenarioId in c('01', '02', '02b', '03', '04')) {
 		print(paste('Printing statistic for', scenarioId, algo))
 		# latency <- latency[10:NROW(latency),]
 		latency <- latency[latency$Timestamp > trim,]
-		print(summary(latency[latency$Timestamp > trim,], digits=16))
+		print(summary(latency[latency$Timestamp > trim,]))
 		latency.dt <- data.table(latency)
 		lat50.by.client <- latency.dt[,quantile(Latency,c(0.50)),by=list(ClientId)]
 		lat95.by.client <- latency.dt[,quantile(Latency,c(0.95)),by=list(ClientId)]
