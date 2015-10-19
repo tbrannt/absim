@@ -10,7 +10,7 @@ RATE_INTERVAL <- 20
 
 options(digits=16) # for summary to be less a pain in the a...
 
-for (scenarioId in c('01', '02', '02b', '03', '04')) {
+for (scenarioId in c('01', '02', '02b', '03', '03b', '04')) {
 	plotList <- list()
 	for (algo in c('AIMD', 'BIC', 'PISC', 'C3')) {
 		listPos <- length(plotList) + 1
@@ -177,6 +177,16 @@ for (scenarioId in c('01', '02', '02b', '03', '04')) {
 			geom_line(aes(y=Rate, x=Timestamp, color=role), size=4) +
 			ylim(c(0, 40)) +
 			xlim(c(0, 12000)) +
+			ggtitle(algo) +
+			theme_bw() +
+			theme(text = element_text(size=90),
+				axis.text = element_text(size=90),
+				legend.key.size = unit(4, "cm"))
+		} else if(grepl('03b', prefix)) {
+			plotList[[listPos]] <- ggplot(normalizedRates.agg) +
+			geom_line(aes(y=Rate, x=Timestamp, color=role), size=4) +
+			ylim(c(0, 30)) +
+			xlim(c(0, 38000)) +
 			ggtitle(algo) +
 			theme_bw() +
 			theme(text = element_text(size=90),

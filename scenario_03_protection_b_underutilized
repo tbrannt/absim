@@ -1,0 +1,233 @@
+#!/bin/bash
+
+cd simulations;
+
+# Run tests
+python -m unittest discover . '*test*.py'
+
+# # # To profile, replace the first line with:
+# # # python -m cProfile -o output.txt experiment.py \"
+
+python experiment.py  \
+	--numClients 10 \
+	--numServers 5 \
+	--numWorkload 200 \
+	--workloadModel poisson \
+	--numLateStartWorkload 30 \
+	--lateStartWorkloadStartTime 10000 \
+	--lateStartWorkloadNumClients 3 \
+	--lateStartWorkloadNumRequests 55500 \
+	--serverConcurrency 4 \
+	--serviceTime 4 \
+	--utilization 0.15 \
+	--serviceTimeModel random.expovariate \
+	--replicationFactor 3 \
+	--backpressure \
+	--rateInterval  20\
+	--cubicC 0.000004\
+	--cubicSmax 10\
+	--cubicBeta 0.2\
+	--hysterisisFactor 2\
+	--selectionStrategy C3 \
+	--shadowReadRatio 0.1 \
+	--accessPattern uniform \
+	--nwLatencyBase 0.2 \
+	--nwLatencyMu 0.0\
+	--nwLatencySigma 0.00 \
+	--expPrefix 03b_C3 \
+	--simulationDuration 80000 \
+	--seed 3 \
+	--numRequests 120000\
+	--logFolder logs\
+	--expScenario base\
+	--demandSkew 0.0\
+	--highDemandFraction 0.0\
+	--slowServerFraction 0.0\
+	--slowServerSlowness 0.0\
+	--intervalParam 500\
+	--concurrencyWeight 10\
+	--batchSizeModel constant\
+	--batchSizeParam 1;
+
+python experiment.py  \
+	--numClients 10 \
+	--numServers 5 \
+	--numWorkload 200 \
+	--workloadModel poisson \
+	--numLateStartWorkload 30 \
+	--lateStartWorkloadStartTime 10000 \
+	--lateStartWorkloadNumClients 3 \
+	--lateStartWorkloadNumRequests 55500 \
+	--serverConcurrency 4 \
+	--serviceTime 4 \
+	--utilization 0.15 \
+	--serviceTimeModel random.expovariate \
+	--replicationFactor 3 \
+	--backpressure \
+	--backpressureStrategy aimd \
+	--rateInterval  20\
+	--cubicC 0.000004\
+	--cubicSmax 10\
+	--cubicBeta 0.2\
+	--hysterisisFactor 2\
+	--selectionStrategy C3 \
+	--shadowReadRatio 0.1 \
+	--accessPattern uniform \
+	--nwLatencyBase 0.2 \
+	--nwLatencyMu 0.0\
+	--nwLatencySigma 0.00 \
+	--expPrefix 03b_AIMD \
+	--simulationDuration 80000 \
+	--seed 3 \
+	--numRequests 120000\
+	--logFolder logs\
+	--expScenario base\
+	--demandSkew 0.0\
+	--highDemandFraction 0.0\
+	--slowServerFraction 0.0\
+	--slowServerSlowness 0.0\
+	--intervalParam 500\
+	--concurrencyWeight 10\
+	--batchSizeModel constant\
+	--batchSizeParam 1;
+
+python experiment.py  \
+	--numClients 10 \
+	--numServers 5 \
+	--numWorkload 200 \
+	--workloadModel poisson \
+	--numLateStartWorkload 30 \
+	--lateStartWorkloadStartTime 10000 \
+	--lateStartWorkloadNumClients 3 \
+	--lateStartWorkloadNumRequests 55500 \
+	--serverConcurrency 4 \
+	--serviceTime 4 \
+	--utilization 0.15 \
+	--serviceTimeModel random.expovariate \
+	--replicationFactor 3 \
+	--backpressure \
+	--backpressureStrategy bic \
+	--rateInterval  20\
+	--cubicC 0.000004\
+	--cubicSmax 10\
+	--cubicBeta 0.2\
+	--hysterisisFactor 2\
+	--selectionStrategy C3 \
+	--shadowReadRatio 0.1 \
+	--accessPattern uniform \
+	--nwLatencyBase 0.2 \
+	--nwLatencyMu 0.0\
+	--nwLatencySigma 0.00 \
+	--expPrefix 03b_BIC \
+	--simulationDuration 80000 \
+	--seed 3 \
+	--numRequests 120000\
+	--logFolder logs\
+	--expScenario base\
+	--demandSkew 0.0\
+	--highDemandFraction 0.0\
+	--slowServerFraction 0.0\
+	--slowServerSlowness 0.0\
+	--intervalParam 500\
+	--concurrencyWeight 10\
+	--batchSizeModel constant\
+	--batchSizeParam 1;
+
+python experiment.py  \
+	--numClients 10 \
+	--numServers 5 \
+	--numWorkload 200 \
+	--workloadModel poisson \
+	--numLateStartWorkload 30 \
+	--lateStartWorkloadStartTime 10000 \
+	--lateStartWorkloadNumClients 3 \
+	--lateStartWorkloadNumRequests 55500 \
+	--serverConcurrency 4 \
+	--serviceTime 4 \
+	--utilization 0.15 \
+	--serviceTimeModel random.expovariate \
+	--replicationFactor 3 \
+	--backpressure \
+	--backpressureStrategy pisces \
+	--desiredRtt 3.0 \
+	--piscesAlpha 0.1\
+	--piscesBeta 0.15\
+	--rateInterval  20\
+	--cubicC 0.000004\
+	--cubicSmax 10\
+	--cubicBeta 0.2\
+	--hysterisisFactor 2\
+	--selectionStrategy C3 \
+	--shadowReadRatio 0.1 \
+	--accessPattern uniform \
+	--nwLatencyBase 0.2 \
+	--nwLatencyMu 0.0\
+	--nwLatencySigma 0.00 \
+	--expPrefix 03b_PISC \
+	--simulationDuration 80000 \
+	--seed 3 \
+	--numRequests 120000\
+	--logFolder logs\
+	--expScenario base\
+	--demandSkew 0.0\
+	--highDemandFraction 0.0\
+	--slowServerFraction 0.0\
+	--slowServerSlowness 0.0\
+	--intervalParam 500\
+	--concurrencyWeight 10\
+	--batchSizeModel constant\
+	--batchSizeParam 1;
+
+python experiment.py  \
+	--numClients 10 \
+	--numServers 5 \
+	--numWorkload 200 \
+	--workloadModel poisson \
+	--numLateStartWorkload 30 \
+	--lateStartWorkloadStartTime 10000 \
+	--lateStartWorkloadNumClients 3 \
+	--lateStartWorkloadNumRequests 55500 \
+	--serverConcurrency 4 \
+	--serviceTime 4 \
+	--utilization 0.15 \
+	--serviceTimeModel random.expovariate \
+	--replicationFactor 3 \
+	--rateInterval  20\
+	--cubicC 0.000004\
+	--cubicSmax 10\
+	--cubicBeta 0.2\
+	--hysterisisFactor 2\
+	--selectionStrategy C3 \
+	--shadowReadRatio 0.1 \
+	--accessPattern uniform \
+	--nwLatencyBase 0.2 \
+	--nwLatencyMu 0.0\
+	--nwLatencySigma 0.00 \
+	--expPrefix 03b_NO_BACK \
+	--simulationDuration 80000 \
+	--seed 3 \
+	--numRequests 120000\
+	--logFolder logs\
+	--expScenario base\
+	--demandSkew 0.0\
+	--highDemandFraction 0.0\
+	--slowServerFraction 0.0\
+	--slowServerSlowness 0.0\
+	--intervalParam 500\
+	--concurrencyWeight 10\
+	--batchSizeModel constant\
+	--batchSizeParam 1;
+
+cd ..
+cd plotting;
+# Rscript timeseries.r PRIMARY;
+# Rscript timeseries.r rp;
+# Rscript timeseries.r ORA;
+# Rscript timeseries.r LOR;
+# Rscript timeseries.r pendingXserviceTime;
+Rscript timeseries.r 03b_C3;
+Rscript timeseries.r 03b_BIC;
+Rscript timeseries.r 03b_PISC;
+Rscript timeseries.r 03b_NO_BACK;
+Rscript timeseries.r 03b_AIMD;
+cd ..

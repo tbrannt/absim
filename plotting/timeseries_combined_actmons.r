@@ -10,7 +10,7 @@ RATE_INTERVAL <- 20
 
 options(digits=16) # for summary to be less a pain in the a...
 
-for (scenarioId in c('01', '02', '02b', '03', '04')) {
+for (scenarioId in c('01', '02', '02b', '03', '03b', '04')) {
 	plotList <- list()
 	for (algo in c('AIMD', 'BIC', 'PISC', 'C3')) {
 		listPos <- length(plotList) + 1

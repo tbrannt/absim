@@ -10,7 +10,7 @@ RATE_INTERVAL <- 20
 
 options(digits=16) # for summary to be less a pain in the a...
 
-for (scenarioId in c('01', '02', '02b', '03', '04')) {
+for (scenarioId in c('01', '02', '02b', '03', '03b', '04')) {
 	plotList <- list()
 	for (algo in c('AIMD', 'BIC', 'PISC', 'C3')) {
 		listPos <- length(plotList) + 1
@@ -110,6 +110,23 @@ for (scenarioId in c('01', '02', '02b', '03', '04')) {
 				facet_grid(ServerId ~ .) +
 				ylim(c(0, 3000)) +
 				xlim(c(0, 12500)) +
+				ggtitle(algo) +
+				theme_bw() +
+				theme(text = element_text(size=60),
+				axis.text = element_text(size=30))
+		} else if(grepl('03b', prefix)) {
+			plotList[[listPos]] <- ggplot(wait.mon[wait.mon$ServerId < 5,]) +
+				geom_line(aes(y=WaitingRequests, x=Timestamp), size=2) +
+				facet_grid(ServerId ~ .) +
+				ggtitle(algo) +
+				theme_bw() +
+				theme(text = element_text(size=60),
+				axis.text = element_text(size=30))
+		} else if(grepl('03', prefix)) {
+			plotList[[listPos]] <- ggplot(wait.mon[wait.mon$ServerId < 5,]) +
+				geom_line(aes(y=WaitingRequests, x=Timestamp), size=2) +
+				facet_grid(ServerId ~ .) +
+				ylim(c(0, 3000)) +
 				ggtitle(algo) +
 				theme_bw() +
 				theme(text = element_text(size=60),
