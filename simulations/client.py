@@ -29,6 +29,7 @@ class Client():
         self.receiveRateMonitor = Simulation.Monitor(name="ReceiveRateMonitor")
         self.tokenMonitor = Simulation.Monitor(name="TokenMonitor")
         self.edScoreMonitor = Simulation.Monitor(name="edScoreMonitor")
+        self.backlogMonitor = Simulation.Monitor(name="backlogMonitor")
         self.backpressure = backpressure    # True/Flase
         self.shadowReadRatio = shadowReadRatio
         self.demandWeight = demandWeight
@@ -604,6 +605,8 @@ class BackpressureScheduler(Simulation.Process):
     def run(self):
         while(1):
             yield Simulation.hold, self,
+
+            self.client.backlogMonitor.observe(len(self.backlogQueue))
 
             if (len(self.backlogQueue) != 0):
                 task, replicaSet = self.backlogQueue[0]

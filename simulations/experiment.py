@@ -362,6 +362,8 @@ def runExperiment(args):
                                              args.expPrefix), 'w')
     serverRateFD = open("../%s/%s_serverRate" % (args.logFolder,
                                                  args.expPrefix), 'w')
+    backlogFD = open("../%s/%s_clientBacklogs" % (args.logFolder,
+                                           args.expPrefix), 'w')
 
     for clientNode in clients:
         printMonitorTimeSeriesToFile(pendingRequestsFD,
@@ -385,6 +387,10 @@ def runExperiment(args):
         printMonitorTimeSeriesToFile(edScoreFD,
                                      clientNode.id,
                                      clientNode.edScoreMonitor)
+        printMonitorTimeSeriesToFile(backlogFD,
+                                     clientNode.id,
+                                     clientNode.backlogMonitor)
+
     for serv in servers:
         printMonitorTimeSeriesToFile(waitMonFD,
                                      serv.id,
