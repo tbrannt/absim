@@ -110,7 +110,7 @@ ggplot(per_client.rate) +
 	#geom_smooth(aes(y=Rate, x=Timestamp, colour=ClientId), linetype='dashed', size=2) +
 	facet_grid(ClientId ~ .) +
 	xlim(c(0,50000)) +
-	ggtitle('C3 - All Rates') +
+	ggtitle(paste0(prefix,' - All Rates')) +
 	theme_bw() +
 	theme(text = element_text(size=40),
 		axis.text = element_text(size=40))

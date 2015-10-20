@@ -37,7 +37,7 @@ python experiment.py  \
 	--expPrefix 03b_C3 \
 	--simulationDuration 80000 \
 	--seed 3 \
-	--numRequests 120000\
+	--numRequests 40000\
 	--logFolder logs\
 	--expScenario base\
 	--demandSkew 0.0\
@@ -79,7 +79,7 @@ python experiment.py  \
 	--expPrefix 03b_AIMD \
 	--simulationDuration 80000 \
 	--seed 3 \
-	--numRequests 120000\
+	--numRequests 40000\
 	--logFolder logs\
 	--expScenario base\
 	--demandSkew 0.0\
@@ -121,7 +121,7 @@ python experiment.py  \
 	--expPrefix 03b_BIC \
 	--simulationDuration 80000 \
 	--seed 3 \
-	--numRequests 120000\
+	--numRequests 40000\
 	--logFolder logs\
 	--expScenario base\
 	--demandSkew 0.0\
@@ -166,7 +166,7 @@ python experiment.py  \
 	--expPrefix 03b_PISC \
 	--simulationDuration 80000 \
 	--seed 3 \
-	--numRequests 120000\
+	--numRequests 40000\
 	--logFolder logs\
 	--expScenario base\
 	--demandSkew 0.0\
@@ -206,7 +206,7 @@ python experiment.py  \
 	--expPrefix 03b_NO_BACK \
 	--simulationDuration 80000 \
 	--seed 3 \
-	--numRequests 120000\
+	--numRequests 40000\
 	--logFolder logs\
 	--expScenario base\
 	--demandSkew 0.0\
