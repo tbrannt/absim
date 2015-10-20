@@ -104,7 +104,7 @@ colnames(rate)[4] <- "Rate"
 trim <- 100
 per_client.rate <- rate
 #per_client.rate <- rate[rate$ServerId == 0,]
-png(paste(prefix, "_per_client_rate.png", sep=""), height=2096, width=2096)
+png(paste(prefix, "_singleclient_rates.png", sep=""), height=2096, width=2096)
 ggplot(per_client.rate) +
 	geom_line(aes(y=Rate, x=Timestamp), size=1) +
 	#geom_smooth(aes(y=Rate, x=Timestamp, colour=ClientId), linetype='dashed', size=2) +
