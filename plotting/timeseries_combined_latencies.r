@@ -10,7 +10,7 @@ RATE_INTERVAL <- 20
 
 options(digits=16) # for summary to be less a pain in the a...
 
-for (scenarioId in c('03')) {
+for (scenarioId in c('01', '02', '02b', '03', '03b', '04')) {
 	plotList <- list()
 	for (algo in c('AIMD', 'BIC', 'PISC', 'C3')) {
 		listPos <- length(plotList) + 1
@@ -109,7 +109,7 @@ for (scenarioId in c('03')) {
 			plotList[[listPos]] <- ggplot(latency) +
 				geom_point(aes(y=Latency, x=Timestamp), size=2) +
 				facet_grid(ClientId ~ .) +
-				ylim(c(0, 25000)) +
+				ylim(c(0, 2100)) +
 				ggtitle(algo) +
 				theme_bw() +
 				theme(text = element_text(size=40),
