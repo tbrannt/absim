@@ -117,6 +117,7 @@ for (scenarioId in c('03b')) {
 			#geom_smooth(aes(y=Rate, x=Timestamp, colour=ClientId), linetype='dashed', size=2) +
 			facet_grid(ClientId ~ .) +
 			xlim(c(9000,14000)) +
+			ylim(c(0, 9)) +
 			ggtitle(paste0(prefix,' - Target Rates')) +
 			theme_bw() +
 			theme(text = element_text(size=40),

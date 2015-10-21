@@ -22,7 +22,7 @@ for (scenarioId in c('01', '02', '02b', '03', '03b', '04')) {
 		colnames(latency)[3] <- "Latency"
 		colnames(latency)[4] <- "ClientId"
 
-		trim <- 10
+		trim <- 2000
 
 		if(grepl('03', prefix)) {
 			latency <- latency[latency$ClientId=='Client3' | latency$ClientId=='Client4' | latency$ClientId=='Client5' | latency$ClientId=='Client6' | latency$ClientId=='Client7' | latency$ClientId=='Client8' | latency$ClientId=='Client9',]
