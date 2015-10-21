@@ -69,7 +69,7 @@ for (scenarioId in c('01', '02', '02b', '03', '03b', '04')) {
 				ylim(c(0, 400)) +
 				ggtitle(algo) +
 				theme_bw() +
-				theme(text = element_text(size=60),
+				theme(text = element_text(size=40),
 					axis.text = element_text(size=30))		
 		} else if(grepl('03b', prefix)) {
 			plotList[[listPos]] <- ggplot(client.backlog) +
@@ -78,7 +78,7 @@ for (scenarioId in c('01', '02', '02b', '03', '03b', '04')) {
 				ylim(c(0, 400)) +
 				ggtitle(algo) +
 				theme_bw() +
-				theme(text = element_text(size=60),
+				theme(text = element_text(size=40),
 					axis.text = element_text(size=30))	
 		} else if(grepl('03', prefix)) {
 			plotList[[listPos]] <- ggplot(client.backlog) +
@@ -87,7 +87,7 @@ for (scenarioId in c('01', '02', '02b', '03', '03b', '04')) {
 				ylim(c(0, 400)) +
 				ggtitle(algo) +
 				theme_bw() +
-				theme(text = element_text(size=60),
+				theme(text = element_text(size=40),
 					axis.text = element_text(size=30))	
 		} else {
 			plotList[[listPos]] <- ggplot(client.backlog) +
@@ -96,7 +96,7 @@ for (scenarioId in c('01', '02', '02b', '03', '03b', '04')) {
 				ylim(c(0, 400)) +
 				ggtitle(algo) +
 				theme_bw() +
-				theme(text = element_text(size=60),
+				theme(text = element_text(size=40),
 					axis.text = element_text(size=30))	
 		}
 	}
