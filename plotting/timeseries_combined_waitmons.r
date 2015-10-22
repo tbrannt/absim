@@ -132,6 +132,15 @@ for (scenarioId in c('01', '02', '02b', '03', '03b', '04')) {
 				theme_bw() +
 				theme(text = element_text(size=60),
 				axis.text = element_text(size=30))
+		} else if(grepl('04', prefix)) {
+			plotList[[listPos]] <- ggplot(wait.mon[wait.mon$ServerId < 5,]) +
+				geom_line(aes(y=WaitingRequests, x=Timestamp), size=2) +
+				facet_grid(ServerId ~ .) +
+				ylim(c(0, 6300)) +
+				ggtitle(algo) +
+				theme_bw() +
+				theme(text = element_text(size=60),
+				axis.text = element_text(size=30))
 		} else {
 			plotList[[listPos]] <- ggplot(wait.mon[wait.mon$ServerId < 5,]) +
 				geom_line(aes(y=WaitingRequests, x=Timestamp), size=2) +
