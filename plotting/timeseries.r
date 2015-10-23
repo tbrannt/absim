@@ -113,14 +113,30 @@ ggplot(act.mon) +
 dev.off()
 
 png(paste(prefix, "_wait.mon.png", sep=""), height=1024, width=1024)
-ggplot(wait.mon[wait.mon$ServerId < 5,]) +
-	  geom_line(aes(y=WaitingRequests, x=Timestamp), size=2) +
-	  facet_grid(ServerId ~ .) +
-	  ggtitle(paste(prefix, "Wait")) +
-	  theme_bw() +
-	  theme(text = element_text(size=15),
-			axis.text = element_text(size=20))
-dev.off()
+if(grepl('04', prefix)) {
+	print({
+		ggplot(wait.mon[wait.mon$ServerId < 5,]) +
+		  geom_line(aes(y=WaitingRequests, x=Timestamp), size=2) +
+		  facet_grid(ServerId ~ .) +
+		  ylim(c(0, 7000)) +
+		  ggtitle(paste(prefix, "Wait")) +
+		  theme_bw() +
+		  theme(text = element_text(size=15),
+				axis.text = element_text(size=20))
+	})
+	dev.off()
+} else {
+	print({
+		ggplot(wait.mon[wait.mon$ServerId < 5,]) +
+		  geom_line(aes(y=WaitingRequests, x=Timestamp), size=2) +
+		  facet_grid(ServerId ~ .) +
+		  ggtitle(paste(prefix, "Wait")) +
+		  theme_bw() +
+		  theme(text = element_text(size=15),
+				axis.text = element_text(size=20))
+	})
+	dev.off()
+}
 
 png(paste(prefix, "_pending.requests.png", sep=""), height=1024, width=1024)
 ggplot(pending.requests[pending.requests$ClientId == "Client0",]) +
