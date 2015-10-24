@@ -15,7 +15,8 @@ class Client():
                  cubicC, cubicSmax, cubicBeta, hysterisisFactor,
                  demandWeight, costExponent, concurrencyWeight, 
                  backpressureStrategy=None, requestCountEquilibrium=None, 
-                 piscesDesiredRtt=None, workObserver=None, piscesAlpha=None, piscesBeta=None):
+                 piscesDesiredRtt=None, workObserver=None, piscesAlpha=None, piscesBeta=None,
+                 bicDecreaseFactor=None, aimdDecreaseFactor=None, aimdIncrease=None):
         self.id = id_
         self.serverList = serverList
         self.accessPattern = accessPattern
@@ -91,7 +92,7 @@ class Client():
         # Constants
         self.BIC_MIN_INCREMENT = 0.1
         self.BIC_MAX_INCREMENT = 50
-        self.BIC_DECREASE_FACTOR = 0.85
+        self.BIC_DECREASE_FACTOR = bicDecreaseFactor
         self.BIC_SLOW_START_START = self.BIC_MIN_INCREMENT * 2
         # variables
         self.bicMax = {node: -1 for node in serverList}
@@ -100,8 +101,8 @@ class Client():
         self.lastRateChange = {node: 0 for node in serverList}
 
         # Constants for AIMD
-        self.AIMD_DECREASE_FACTOR = 0.85
-        self.AIMD_INCREASE = 0.3
+        self.AIMD_DECREASE_FACTOR = aimdDecreaseFactor
+        self.AIMD_INCREASE = aimdIncrease
 
         # Backpressure related initialization
         if (backpressure is True):

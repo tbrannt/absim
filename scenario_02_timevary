@@ -57,6 +57,8 @@ python experiment.py  \
 	--replicationFactor 3 \
 	--backpressure \
 	--backpressureStrategy aimd \
+	--aimdDecreaseFactor 0.85 \
+	--aimdIncrease 0.3 \
 	--rateInterval  20\
 	--cubicC 0.000004\
 	--cubicSmax 10\
@@ -96,6 +98,7 @@ python experiment.py  \
 	--replicationFactor 3 \
 	--backpressure \
 	--backpressureStrategy bic \
+	--bicDecreaseFactor 0.85 \
 	--rateInterval  20\
 	--cubicC 0.000004\
 	--cubicSmax 10\

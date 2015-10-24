@@ -80,16 +80,6 @@ colnames(client.backlog)[1] <- "ClientId"
 colnames(client.backlog)[2] <- "Timestamp"
 colnames(client.backlog)[3] <- "Size"
 
-png(paste(prefix, "_clientbacklogs.png", sep=""), height=512, width=1024)
-ggplot(client.backlog) +
-	  geom_line(aes(y=Size, x=Timestamp), size=2) +
-	  facet_grid(ClientId ~ .) +
-	  ggtitle(paste(prefix, "Client Backlogs")) +
-	  theme_bw() +
-	  theme(text = element_text(size=15),
-			axis.text = element_text(size=20))
-dev.off()
-
 #trim <- 14000
 #latency <- latency[latency$Timestamp < trim,]
 png(paste(prefix, "_latency.png", sep=""), height=1024, width=1024)
@@ -379,6 +369,16 @@ ggplot(rate.avg) +
 	theme(text = element_text(size=90),
 		axis.text = element_text(size=90),
 		legend.key.size = unit(4, "cm"))
+dev.off()
+
+png(paste(prefix, "_clientbacklogs.png", sep=""), height=512, width=1024)
+ggplot(client.backlog) +
+	  geom_line(aes(y=Size, x=Timestamp), size=2) +
+	  facet_grid(ClientId ~ .) +
+	  ggtitle(paste(prefix, "Client Backlogs")) +
+	  theme_bw() +
+	  theme(text = element_text(size=15),
+			axis.text = element_text(size=20))
 dev.off()
 
 # rate <- read.table(paste("../logs/", prefix, "_ReceiveRate", sep=""))
