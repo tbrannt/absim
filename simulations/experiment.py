@@ -249,7 +249,7 @@ def runExperiment(args):
                           concurrencyWeight=args.concurrencyWeight, 
                           backpressureStrategy=args.backpressureStrategy,
                           requestCountEquilibrium=args.requestCountEquilibrium,
-                          desiredRtt=args.desiredRtt,
+                          piscesDesiredRtt=args.piscesDesiredRtt,
                           workObserver=workObserver,
                           piscesAlpha=args.piscesAlpha,
                           piscesBeta=args.piscesBeta)
@@ -473,7 +473,7 @@ if __name__ == '__main__':
                         type=str, default="cubic")
     parser.add_argument('--requestCountEquilibrium', nargs='?',
                         type=int, default=2)
-    parser.add_argument('--desiredRtt', nargs='?',
+    parser.add_argument('--piscesDesiredRtt', nargs='?',
                         type=float, default=5.0)
     parser.add_argument('--piscesAlpha', nargs='?',
                         type=float, default=0.1)

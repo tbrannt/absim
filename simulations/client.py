@@ -15,7 +15,7 @@ class Client():
                  cubicC, cubicSmax, cubicBeta, hysterisisFactor,
                  demandWeight, costExponent, concurrencyWeight, 
                  backpressureStrategy=None, requestCountEquilibrium=None, 
-                 desiredRtt=None, workObserver=None, piscesAlpha=None, piscesBeta=None):
+                 piscesDesiredRtt=None, workObserver=None, piscesAlpha=None, piscesBeta=None):
         self.id = id_
         self.serverList = serverList
         self.accessPattern = accessPattern
@@ -37,7 +37,7 @@ class Client():
         self.concurrencyWeight = concurrencyWeight
         self.backpressureStrategy = backpressureStrategy
         self.requestCountEquilibrium = requestCountEquilibrium
-        self.desiredRtt = desiredRtt
+        self.piscesDesiredRtt = piscesDesiredRtt
         self.workObserver = workObserver
         self.piscesAlpha = piscesAlpha
         self.piscesBeta = piscesBeta
@@ -440,7 +440,7 @@ class Client():
             respT = metricMap["responseTime"]
             self.rateLimiters[replica].rate = (1 - self.piscesAlpha) * \
                     self.rateLimiters[replica].rate + (self.piscesAlpha * \
-                    self.rateLimiters[replica].rate * self.desiredRtt / respT + self.piscesBeta)
+                    self.rateLimiters[replica].rate * self.piscesDesiredRtt / respT + self.piscesBeta)
             self.rateLimiters[replica].rate = max(self.rateLimiters[replica].rate, self.PISCES_MIN_RATE)
             self.rateLimiters[replica].rate = min(self.rateLimiters[replica].rate, self.PISCES_MAX_RATE)
 
