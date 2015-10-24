@@ -180,7 +180,7 @@ def runExperiment(args):
             Simulation.activate(mup, mup.run(), at=0.0)
             muUpdaters.append(mup)
             servers.append(serv)
-    elif(args.expScenario == "syncTimeVaryingServiceTimeServers"):
+    elif(args.expScenario == "syncTimeVar"):
         assert args.intervalParam != 0.0
         assert args.timeVaryingDrift != 0.0
 
@@ -271,7 +271,7 @@ def runExperiment(args):
         arrivalRate = (args.utilization * sum(serviceRatePerServer))
         interArrivalTime = 1/float(arrivalRate)
     elif(args.expScenario == "timeVaryingServiceTimeServers" or \
-            args.expScenario == "syncTimeVaryingServiceTimeServers"):
+            args.expScenario == "syncTimeVar"):
         mu = 1/float(args.serviceTime)
         mu_dot_D = mu * args.timeVaryingDrift
         avg_mu = (mu + mu_dot_D)/2.0
