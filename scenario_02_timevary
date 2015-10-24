@@ -21,7 +21,7 @@ python experiment.py  \
 	--rateInterval  20\
 	--cubicC 0.000004\
 	--cubicSmax 10\
-	--cubicBeta 0.2\
+	--cubicBeta 0.15\
 	--hysterisisFactor 2\
 	--selectionStrategy C3 \
 	--shadowReadRatio 0.1 \
